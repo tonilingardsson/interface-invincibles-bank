@@ -19,8 +19,15 @@ namespace The_Invincible_Bank
 
         public bool LogIn(int securityNumber, string password)
         {
-            //Code here! :D
-            return true;
+
+            if (securityNumber == SecurityNumber)
+            {
+                if (password == Password)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         public Users CreateNewUser(int securityNumber, string password)
         {
