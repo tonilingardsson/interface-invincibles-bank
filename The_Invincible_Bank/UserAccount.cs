@@ -9,7 +9,7 @@ namespace The_Invincible_Bank
 {
     internal class UserAccount
     {
-        List<BankAccount> Accounts {  get; set; }
+        public List<BankAccount> Accounts {  get; set; }
         public bool Transfer(int bankAccountOne, int bankAccountTwo, decimal sum)
         {
             // Överför pengar mellan ett bankkonto till ett annat. 
