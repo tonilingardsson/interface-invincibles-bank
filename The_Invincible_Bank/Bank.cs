@@ -10,20 +10,20 @@ namespace The_Invincible_Bank
 {
     internal class Bank
     {
-        //private List<Admin> adminAccounts;
+        private List<Admin> adminAccounts;
         private List<Customer> customerAccounts;
 
-        //private Admin adminOne;
+        private Admin adminOne;
         private User userOne;
 
         private int currentUserAccount = -1;
         
         public Bank()
         {
-            //var adminOne = new Admin(1111, "1111");
+            var adminOne = new Admin(1111, "1111");
             var userOne = new Customer(2222, "2222");
 
-            //adminAccounts = new List<Admin>();
+            adminAccounts = new List<Admin>();
             customerAccounts = new List<Customer>();
 
             //adminAccounts.Add(adminOne);
@@ -72,7 +72,7 @@ namespace The_Invincible_Bank
 
                 foreach (Customer accountA in customerAccounts) // Steps in to the list of accounts
                 {
-                    foreach (BankAccount accountB in customerAccounts[counter].Accounts) //Steps in to the list of accounts the user have
+                    foreach (BankAccount accountB in customerAccounts[counter].Accounts) //Steps in to the list of accounts the user own
                     {
                         if (accountB.AccountNumber == accountTwo)
                         {
@@ -160,22 +160,22 @@ namespace The_Invincible_Bank
                     break;                                   
                 }
             }
-            //if (!accountExists)
-            //{
-            //    Console.WriteLine("This account does not exist in our bank");
-            //    Console.WriteLine("Create a new account or try again?");
-            //    Console.WriteLine("New account: 1 | Try again: 2");
+            if (!accountExists)
+            {
+                Console.WriteLine("This account does not exist in our bank");
+                Console.WriteLine("Create a new account or try again?");
+                Console.WriteLine("New account: 1 | Try again: 2");
 
-            //    if (input.GetNumberFromUser(1, 2) == 1)
-            //    {
-            //        UserLogIn();
-            //    }
-            //    else
-            //    {
-            //        CreateNewUser();
-            //        UserLogIn();
-            //    }
-            //}
+                if (input.GetNumberFromUser(1, 2) == 1)
+                {
+                    UserLogIn();
+                }
+                else
+                {
+                    CreateNewUser();
+                    UserLogIn();
+                }
+            }
             return userIndex; //Returns index of the user account that is logged in
         }
         public bool Run()
