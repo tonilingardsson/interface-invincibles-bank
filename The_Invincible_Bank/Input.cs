@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace The_Invincible_Bank
 {
-    internal class Input
+    static class Input
     {
-        public int GetNumberFromUser(int min, int max)
+        static public int GetNumberFromUser(int min, int max)
         {
             int choice;
             Console.WriteLine();
