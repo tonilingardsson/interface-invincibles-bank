@@ -10,31 +10,29 @@ namespace The_Invincible_Bank
 {
     internal class Bank
     {
-        List<UserAccount> UserAccounts { get; set; }
+        List<Customer> UserAccounts { get; set; }
         Input input;
         int currentUserAccount = -1;
         
         public Bank()
         {
-            UserAccounts = new List<UserAccount>();
+            UserAccounts = new List<Customer>();
             input = new Input();
         }
 
         public bool Transfer(int accountOne, int accountTwo, decimal sum)
-        {
-            //Skicka över pengar från ett konto till ett annat mellan två OLIKA användare. 
-            //Kom ihåg att converta valutan
-            //Kom ihåg att kolla så att det finns tillräckligt med pengar, om inte, retunera false.
-            if (CheckSenderAccount(accountOne, sum))
+        {         
+            if (CheckSenderAccountValidity(accountOne, sum))
             {
-                if (CheckReceaverAccount(accountTwo))
+                if (CheckReceaverAccountValidity(accountTwo))
                 {
-
+                    //Convert
                 }                
-            }  
+            }
+            return false;
         }
 
-        public bool CheckSenderAccount(int accountOne, decimal sum)
+        public bool CheckSenderAccountValidity(int accountOne, decimal sum)
         {
             
             foreach (BankAccount account in UserAccounts[currentUserAccount].Accounts) //Checks if the stated account is owned by the user
@@ -53,7 +51,7 @@ namespace The_Invincible_Bank
             }
             return false; //Retunerar false ifall kontot antingen inte finns eller inte har tillräckligt mycket pengar.
         }
-        public bool CheckReceaverAccount(int accountTwo)
+        public bool CheckReceaverAccountValidity(int accountTwo)
         {
             bool validAccount = false;
             int counter = 0;
@@ -62,7 +60,7 @@ namespace The_Invincible_Bank
             {
                 validAccount = false;
 
-                foreach (UserAccount accountA in UserAccounts) // Steps in to the list of accounts
+                foreach (Customer accountA in UserAccounts) // Steps in to the list of accounts
                 {
                     foreach (BankAccount accountB in UserAccounts[counter].Accounts) //Steps in to the list of accounts the user have
                     {
@@ -99,8 +97,8 @@ namespace The_Invincible_Bank
             Console.WriteLine("Please enter a password");
             password = Console.ReadLine();
 
-            UserAccount newAccount = new UserAccount(securityNumber, password);
-            UserAccounts.Add(new UserAccount(securityNumber, password));
+            Customer newAccount = new Customer(securityNumber, password);
+            UserAccounts.Add(new Customer(securityNumber, password));
 
             Console.WriteLine("Account was created");
         }
