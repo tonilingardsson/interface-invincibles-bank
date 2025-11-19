@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Text;
@@ -19,23 +20,44 @@ namespace The_Invincible_Bank
             input = new Input();
         }
 
-        public bool TransferBetweenAccounts(int accountOne, int accountTwo)
+        public bool Transfer(int accountOne, int accountTwo, decimal sum)
         {
             //Skicka över pengar från ett konto till ett annat mellan två OLIKA användare. 
             //Kom ihåg att converta valutan
             //Kom ihåg att kolla så att det finns tillräckligt med pengar, om inte, retunera false.
-            bool validAccount = false;
-            int counter = 0;
+            if (CheckSenderAccount(accountOne, sum))
+            {
+                if (CheckReceaverAccount(accountTwo))
+                {
 
-            //Checks if the stated account is owned by the user
-            foreach (BankAccount account in UserAccounts[currentUserAccount].Accounts)
+                }                
+            }  
+        }
+
+        public bool CheckSenderAccount(int accountOne, decimal sum)
+        {
+            
+            foreach (BankAccount account in UserAccounts[currentUserAccount].Accounts) //Checks if the stated account is owned by the user
             {
                 if (account.AccountNumber == accountOne)
                 {
-                    validAccount = true;
-                    break;
+                    if (account.Sum >= sum) //Om det finns tillräckligt med pengar på kontot 
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
+            return false; //Retunerar false ifall kontot antingen inte finns eller inte har tillräckligt mycket pengar.
+        }
+        public bool CheckReceaverAccount(int accountTwo)
+        {
+            bool validAccount = false;
+            int counter = 0;
+
             if (validAccount == true)
             {
                 validAccount = false;
@@ -47,11 +69,13 @@ namespace The_Invincible_Bank
                         if (accountB.AccountNumber == accountTwo)
                         {
                             validAccount = true;
+                            return true;
                         }
                     }
                     counter++;
                 }
             }
+            return false; //Retunrar false om kontot inte finns.
         }
 
         public bool Borrow(int bankAccount, decimal amount)
@@ -89,6 +113,7 @@ namespace The_Invincible_Bank
             string inputPassword = string.Empty;
             int userIndex = -1;
             int userLoginTries = 0;
+            currentUserAccount = 0;
 
             Console.Write("Security number: ");
             while (!int.TryParse(Console.ReadLine(), out inputSecurityNumber) && inputSecurityNumber.ToString().Length != 4)
@@ -96,43 +121,42 @@ namespace The_Invincible_Bank
                 Console.WriteLine("This is not a valid security number, please try again");
             }
 
-            //check if account exists
+            //check if account exists in the user account list
             foreach (var user in UserAccounts)
-            {
-                /*
-                if (user.SecurityNumber == inputSecurityNumber)
+            {               
+                if (user.SecurityNumber == inputSecurityNumber) //If we found the security number in the list of users
                 {                   
-                    while (!user.LogIn(inputSecurityNumber,inputPassword))
+                    while (!user.LogIn(inputSecurityNumber,inputPassword)) //As long as the password is wrong
+                    {
+                        Console.Write("Password: "); //Replace
+
+                        // ---
+                        inputPassword = Console.ReadLine();
+                        // ---
+
+                        if(!user.LogIn(inputSecurityNumber,inputPassword))
                         {
-                            Console.Write("Password: ") //Replace
+                            Console.Clear();
+                            Console.WriteLine("Wrong Password"); //Replace
 
-                            // ---
-                            string inputPassword = Console.ReadLine();
-                            // ---
-
-                            if(!user.LogIn(inputSecurityNumber,inputPassword))
+                            userLoginTries++;
+                            if (userLoginTries == 3)
                             {
-                                Console.Clear();
-                                Console.WriteLine("Wrong Password") //Replace
-
-                                userLoginTries++;
-                                if (userLoginTries == 3)
-                                {
-                                    Console.WriteLine("You have failed to enter the right credentials too many times.")
-                                    Console.WriteLine("Closing system....")
-                                    return -1;
-                                }
+                                Console.WriteLine("You have failed to enter the right credentials too many times.");
+                                Console.WriteLine("Closing system....");
+                                return -1;
                             }
                         }
-                    Console.WriteLine("Welcome!") //Replace
+                    }
+                    Console.WriteLine("Welcome!"); //Replace
                     accountExists = true;
                     break;                                   
                 }
-                */
+                currentUserAccount++;
             }
             if (!accountExists)
             {
-                Console.WriteLine("This account does not exist in out bank");
+                Console.WriteLine("This account does not exist in our bank");
                 Console.WriteLine("Create a new account or try again?");
                 Console.WriteLine("New account: 1 | Try again: 2");
 
@@ -153,7 +177,7 @@ namespace The_Invincible_Bank
             //Koden börjar och slutar här.
             //Logga
             //Välkommen
-            UserLogIn();
+            UserLogIn(); //Logs in to user and sets the current user index
 
             return true;
         }
