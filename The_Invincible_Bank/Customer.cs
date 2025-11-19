@@ -10,23 +10,17 @@ using System.Threading.Tasks;
 
 namespace The_Invincible_Bank
 {
-    internal class Customer
+    internal class Customer : User
     {
-        private int _securityNumber;
-        private string Password { get; set; }
-        public List<BankAccount> Accounts { get; set; }
+        private List<BankAccount> Accounts { get; set; }
+        private BankAccount accountOne;
 
-        public int SecurityNumber 
-        {
-            get { return _securityNumber;  } 
-        }
         public Customer(int securityNumber, string password)
+            : base(securityNumber, password)
         {
-            SecurityNumber = securityNumber;
-            Password = password;
+            accountOne = new BankAccount("Bank Account", WorldMarket.Currency.Sek, 1234);
+            Accounts = new List<BankAccount> { accountOne };
         }
-
-
         public bool LogIn(int securityNumber, string password)
         {
             if (securityNumber == SecurityNumber)
