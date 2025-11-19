@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace The_Invincible_Bank
 {
-    internal class Users
+    internal class Admin : User
     {
-        public Users CreateNewUser(int securityNumber, string password)
+        public void CreateNewUser()
         {
-            return new Users(securityNumber, password);
+
+        }
+        private void UpdateCurrencyValue()
+        {
+
         }
     }
 }
