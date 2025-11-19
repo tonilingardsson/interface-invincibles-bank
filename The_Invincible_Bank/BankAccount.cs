@@ -8,11 +8,15 @@ namespace The_Invincible_Bank
 {
     internal class BankAccount
     {
-        public string Name {  get; set; }
-        public decimal Sum { get; set; }
+        public string Name {  get; set; }=string.Empty;
+        public decimal Sum { get; set; } = 0;
         public WorldMarket.Currency CurrencyType { get; set; }
         public int AccountNumber { get; set; }
 
+        public BankAccount()
+        {
+            
+        }
         public BankAccount (string name, WorldMarket.Currency currencyType, int accountNumber)
         {
             Name = name;

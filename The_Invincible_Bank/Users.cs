@@ -8,27 +8,6 @@ namespace The_Invincible_Bank
 {
     internal class Users
     {
-        private int SecurityNumber { get; set; }
-        private string Password { get; set; }
-
-        public Users(int securityNumber, string password)
-        {
-            SecurityNumber = securityNumber;
-            Password = password;
-        }
-
-        public bool LogIn(int securityNumber, string password)
-        {
-
-            if (securityNumber == SecurityNumber)
-            {
-                if (password == Password)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
         public Users CreateNewUser(int securityNumber, string password)
         {
             return new Users(securityNumber, password);

@@ -8,11 +8,11 @@ namespace The_Invincible_Bank
 {
     internal class Bank
     {
-        List<UserAccount> UserAccounts { get; set; }
+        List<Customer> UserAccounts { get; set; }
 
         public Bank()
         {
-            UserAccounts = new List<UserAccount>();
+            UserAccounts = new List<Customer>();
         }
 
         public bool TransferBetweenAccounts(int accountOne, int amountTwo)
