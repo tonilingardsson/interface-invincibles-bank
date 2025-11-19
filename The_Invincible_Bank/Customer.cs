@@ -12,15 +12,20 @@ namespace The_Invincible_Bank
 {
     internal class Customer
     {
-        private int SecurityNumber { get; set; }
+        private int _securityNumber;
         private string Password { get; set; }
         public List<BankAccount> Accounts { get; set; }
 
+        public int SecurityNumber 
+        {
+            get { return _securityNumber;  } 
+        }
         public Customer(int securityNumber, string password)
         {
             SecurityNumber = securityNumber;
             Password = password;
         }
+
 
         public bool LogIn(int securityNumber, string password)
         {
