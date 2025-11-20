@@ -12,14 +12,18 @@ namespace The_Invincible_Bank
 {
     internal class Customer : User
     {
-        private List<BankAccount> Accounts { get; set; }
+        private List<BankAccount> _accounts { get; set; } = new List<BankAccount>();
         private BankAccount accountOne;
-
+        Bank bank = new Bank();
+        public List<BankAccount>Accounts
+        {
+            get { return _accounts; }
+        }
         public Customer(int securityNumber, string password)
             : base(securityNumber, password)
         {
             accountOne = new BankAccount("Bank Account", WorldMarket.Currency.Sek, 1234);
-            Accounts = new List<BankAccount> { accountOne };
+            _accounts = new List<BankAccount> { accountOne };
         }
         public bool LogIn(int securityNumber, string password)
         {
@@ -32,10 +36,43 @@ namespace The_Invincible_Bank
             }
             return false;
         }
-        public bool Transfer() //Fråga om bankkonto från, bankkonto till, summa
+        public bool TransferBeetweenAccounts() //Fråga om bankkonto från, bankkonto till, summa
         {
+            UI.DisplayMessage($"Which account do you want to transfer from?");
+            ShowAccounts();
+
+            int fromAccountIndex = Input.GetNumberFromUser(1, Accounts.Count);
+            if (fromAccountIndex < 0 || fromAccountIndex >= Accounts.Count)
+            {
+                UI.DisplayMessage("Invalid account choice");
+                return false;
+            }
+            decimal amount;
+            UI.DisplayMessage("How much do you want to transfer? ");
+            while (!decimal.TryParse(Console.ReadLine(), out amount) || amount > Accounts[fromAccountIndex].Sum)
+            {
+                Console.WriteLine($"You dont have enough funds to transfer {amount:C}");
+            }
+
+            bank.CheckSenderAccountValidity(fromAccountIndex, amount);
+
+            UI.DisplayMessage($"Which account do you want to transfer from?");
+            ShowAccounts();
+            int toAccountIndex = Input.GetNumberFromUser(1, Accounts.Count);
+            if (toAccountIndex < 0 || fromAccountIndex >= Accounts.Count)
+            {
+                UI.DisplayMessage("Invalid account choice");
+                return false;
+            }
+
+            if (bank.Transfer(fromAccountIndex,toAccountIndex, amount) == true)
+            {
+
+            }
 
         } 
+
+        
 
         //public bool Transfer() //Fråga om bankkonto från, bankkonto till, summa
         //{
@@ -127,7 +164,7 @@ namespace The_Invincible_Bank
             int countFrom = 1;
             foreach (var account in Accounts)
             {
-                Console.WriteLine($"{countFrom}: {account.Name} - Balance: {account.Sum:C}");
+                UI.DisplayMessage($"{countFrom}: {account.Name} - Balance: {account.Sum:C}");
                 countFrom++;
             }
         }
