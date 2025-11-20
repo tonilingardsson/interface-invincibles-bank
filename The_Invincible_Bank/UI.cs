@@ -6,16 +6,44 @@ using System.Threading.Tasks;
 
 namespace The_Invincible_Bank
 {
-    internal class UI
+    static class UI
     {
-        public UI() { }
-        public void DisplayLoggo()
+        static public void DisplayLoggo()
         {
             //Printa ut en logga
         }
-        public void DisplayMessage(string message)
+        static public void DisplayMessage(string message)
         {
-            // lägg stringen i en fin meny och printa ut
+            // ---
+            Console.Write("╔");
+            for (int i = 0; i < message.Length + 6; i++) //Adding 6 for window margin
+            {
+                Console.Write("═");
+            }
+            Console.Write("╗");
+            Console.WriteLine();
+            // ---
+            
+            // ---
+            Console.Write("║   ");
+
+            Console.Write(message);
+
+            Console.Write("   ║");
+            // ---
+
+            // ---
+            Console.WriteLine();
+            Console.Write("╚");
+            for (int i = 0; i < message.Length + 6; i++) //Adding 6 for window margin
+            {
+                Console.Write("═");
+            }
+            Console.Write("╝");
+        }
+        static public void DisplayFile(string filename)
+        {
+           
         }
     }
 }

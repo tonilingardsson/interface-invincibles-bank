@@ -36,6 +36,11 @@ namespace The_Invincible_Bank
         {
 
         } 
+
+        //public bool Transfer() //Fråga om bankkonto från, bankkonto till, summa
+        //{
+
+        //} 
         //{
             //var answer = new Input();
             //Console.WriteLine("Do you want to transfer internal or external?: ");
@@ -115,7 +120,7 @@ namespace The_Invincible_Bank
             //    return true;
             //}
 
-        }
+        //}
 
         public void ShowAccounts() //Visa alla konton med hjälp av UI klassen plz
         {
