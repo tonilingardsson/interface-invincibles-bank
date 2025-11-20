@@ -8,6 +8,10 @@ namespace The_Invincible_Bank
 {
     internal class Admin : User
     {
+        public Admin(int securityNumber, string password)
+        : base(securityNumber, password)
+        {
+        }
         public void CreateNewUser()
         {
 
