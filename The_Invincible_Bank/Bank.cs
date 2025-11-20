@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Reflection.PortableExecutable;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -79,31 +80,49 @@ namespace The_Invincible_Bank
             return false; //Retunrar false om kontot inte finns.
         }
 
-        public bool Borrow(int bankAccount, decimal amount)
+        public bool Borrow(int bankAccount, decimal sum)
         {
-            // Låned användaren tar får inte överstiga värdet på ALLA användarens konton. 
-            // Räntan skall vara på 7% 
-            return true;
+            if (CheckAccountBorrowValidity(sum))
+            {
+                //Add to transfer list
+                UI.DisplayMessage("The amount of " + sum + " will be transfered to your account momentarely.\nAn interest of 7% has been applied");
+                return true;
+            }
+            
+            return false;
         }
-
+        private bool CheckAccountBorrowValidity(decimal sum)
+        {
+            decimal totalWorth = 0;
+            foreach (BankAccount account in customerAccounts[currentUserAccount].Accounts) //Gets the worth of all the accounts of the current user
+            {
+                totalWorth += account.Sum;
+            }
+            if (totalWorth * 5 > sum) //Checks if the the worth is more or less than the borrow amount
+            {
+                return true;
+            }
+            return false;
+        }
         private void CreateNewUser()
         {
             int securityNumber = 0;
             string password = string.Empty;
 
-            Console.WriteLine("Enter your security number. It should contain four digits"); //Replace
+            UI.DisplayMessage("Enter your security number. It should contain four digits");
+
             while (!int.TryParse(Console.ReadLine(), out securityNumber) && securityNumber.ToString().Length != 4)
             {
-                Console.WriteLine("Please enter a valid security number");
+                UI.DisplayMessage("Please enter a valid security number");
             }
 
-            Console.WriteLine("Please enter a password");
+            UI.DisplayMessage("Please enter a password");
             password = Console.ReadLine();
 
             Customer newAccount = new Customer(securityNumber, password);
             customerAccounts.Add(new Customer(securityNumber, password));
 
-            Console.WriteLine("Account was created");
+            UI.DisplayMessage("Account was created");
         }
 
         private int UserLogIn() //If this returns -1, the user failed to log in within 3 tries
@@ -115,10 +134,10 @@ namespace The_Invincible_Bank
             int userIndex = 0;
             int userLoginTries = 0;
 
-            Console.Write("Security number: ");
+            UI.DisplayMessage("Security number: ");
             while (!int.TryParse(Console.ReadLine(), out inputSecurityNumber) && inputSecurityNumber.ToString().Length != 4)
             {
-                Console.WriteLine("This is not a valid security number, please try again");
+                UI.DisplayMessage("This is not a valid security number, please try again");
             }
 
             //check if account exists in the user account list
@@ -128,7 +147,7 @@ namespace The_Invincible_Bank
                 {                   
                     while (!user.LogIn(inputSecurityNumber,inputPassword)) //As long as the password is wrong
                     {
-                        Console.Write("Password: "); //Replace
+                        UI.DisplayMessage("Password: "); //Replace
 
                         // ---
                         inputPassword = Console.ReadLine();
@@ -137,13 +156,12 @@ namespace The_Invincible_Bank
                         if(!user.LogIn(inputSecurityNumber,inputPassword))
                         {
                             Console.Clear();
-                            Console.WriteLine("Wrong Password"); //Replace
+                            UI.DisplayMessage("Wrong Password"); //Replace
 
                             userLoginTries++;
                             if (userLoginTries == 3)
                             {
-                                Console.WriteLine("You have failed to enter the right credentials too many times.");
-                                Console.WriteLine("Closing system....");
+                                UI.DisplayMessage("You have failed to enter the right credentials too many times.\nClosing system....");
                                 return -1;
                             }
                         }
@@ -155,9 +173,7 @@ namespace The_Invincible_Bank
             }
             if (!accountExists)
             {
-                Console.WriteLine("This account does not exist in our bank");
-                Console.WriteLine("Create a new account or try again?");
-                Console.WriteLine("New account: 1 | Try again: 2");
+                UI.DisplayMessage("This account does not exist in our bank.\nCreate a new account or try again?\nNew account: 1 | Try again: 2");
 
                 if (Input.GetNumberFromUser(1, 2) == 1)
                 {
@@ -174,13 +190,17 @@ namespace The_Invincible_Bank
         public bool Run()
         {
             //Koden börjar och slutar här.
-            //Logga
-            //Välkommen
+            UI.DisplayLoggo();
+            // Menu
+
             currentUserAccount =  UserLogIn(); //Logs in to user and sets the current user index
             if (currentUserAccount == -1) //The user failed to login within 3 tries. 
             {
                 return false;
             }
+
+            UI.DisplayMessage("1: Show Accounts\n2: Cretae new account\n3: Transfer money \n4: Convert account currency\n5: Show account history\n6: Borrow money");
+
             return true;
         }
     }
