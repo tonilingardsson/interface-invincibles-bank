@@ -22,22 +22,10 @@ namespace The_Invincible_Bank
             Accounts = new List<BankAccount> { accountOne };
         }
 
+        //public bool Transfer() //Fråga om bankkonto från, bankkonto till, summa
+        //{
 
-        public bool LogIn(int securityNumber, string password)
-        {
-            if (securityNumber == SecurityNumber)
-            {
-                if (password == Password)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public bool Transfer() //Fråga om bankkonto från, bankkonto till, summa
-        {
-
-        } 
+        //} 
         //{
             //var answer = new Input();
             //Console.WriteLine("Do you want to transfer internal or external?: ");
@@ -117,7 +105,7 @@ namespace The_Invincible_Bank
             //    return true;
             //}
 
-        }
+        //}
 
         public void ShowAccounts() //Visa alla konton med hjälp av UI klassen plz
         {
