@@ -7,7 +7,8 @@
             var theBank = new Bank();
             //theBank.Run();
 
-            UI.DisplayMessage("Ass");
+            UI.DisplayLoggo();
+            UI.DisplayMessage("Hello fellow creature!\nMy name is The Bank, and im here to...\nEAT YOUR SOUL");
         }
     }
 }
