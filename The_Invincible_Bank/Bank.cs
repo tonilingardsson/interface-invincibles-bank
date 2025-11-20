@@ -26,7 +26,7 @@ namespace The_Invincible_Bank
             adminAccounts = new List<Admin>();
             customerAccounts = new List<Customer>();
 
-            adminAccounts.Add(adminOne);
+            //adminAccounts.Add(adminOne);
             customerAccounts.Add(userOne);
         }
 
@@ -42,14 +42,14 @@ namespace The_Invincible_Bank
             return false;
         }
 
-        private bool CheckSenderAccountValidity(int accountOne, decimal sum)
+        public bool CheckSenderAccountValidity(int accountOne, decimal sum)
         {
             
             foreach (BankAccount account in customerAccounts[currentUserAccount].Accounts) //Checks if the stated account is owned by the user
             {
                 if (account.AccountNumber == accountOne)
                 {
-                    if (account.Sum >= sum) //If theres enough money on the account
+                    if (account.Sum >= sum) //Om det finns tillräckligt med pengar på kontot 
                     {
                         return true;
                     }
@@ -61,20 +61,27 @@ namespace The_Invincible_Bank
             }
             return false; //Retunerar false ifall kontot antingen inte finns eller inte har tillräckligt mycket pengar.
         }
-        private bool CheckReceaverAccountValidity(int accountTwo)
+        public bool CheckReceaverAccountValidity(int accountTwo)
         {
+            bool validAccount = false;
             int counter = 0;
-            foreach (Customer accountA in customerAccounts) // Steps in to the list of accounts
-            {
-                foreach (BankAccount accountB in customerAccounts[counter].Accounts) //Steps in to the list of accounts the user own
-                {
-                    if (accountB.AccountNumber == accountTwo)
-                    {
 
-                        return true;
+            if (validAccount == true)
+            {
+                validAccount = false;
+
+                foreach (Customer accountA in customerAccounts) // Steps in to the list of accounts
+                {
+                    foreach (BankAccount accountB in customerAccounts[counter].Accounts) //Steps in to the list of accounts the user own
+                    {
+                        if (accountB.AccountNumber == accountTwo)
+                        {
+                            validAccount = true;
+                            return true;
+                        }
                     }
+                    counter++;
                 }
-                counter++;
             }
             return false; //Retunrar false om kontot inte finns.
         }
@@ -86,7 +93,7 @@ namespace The_Invincible_Bank
             return true;
         }
 
-        private void CreateNewUser()
+        public void CreateNewUser()
         {
             int securityNumber = 0;
             string password = string.Empty;
@@ -106,7 +113,7 @@ namespace The_Invincible_Bank
             Console.WriteLine("Account was created");
         }
 
-        private int UserLogIn() //If this returns -1, the user failed to log in within 3 tries
+        public int UserLogIn() //If this returns -1, the user failed to log in within 3 tries
         {
 
             int inputSecurityNumber;
@@ -159,7 +166,7 @@ namespace The_Invincible_Bank
                 Console.WriteLine("Create a new account or try again?");
                 Console.WriteLine("New account: 1 | Try again: 2");
 
-                if (Input.GetNumberFromUser(1, 2) == 1)
+                if (input.GetNumberFromUser(1, 2) == 1)
                 {
                     UserLogIn();
                 }
@@ -177,7 +184,7 @@ namespace The_Invincible_Bank
             //Logga
             //Välkommen
             currentUserAccount =  UserLogIn(); //Logs in to user and sets the current user index
-            if (currentUserAccount == -1) //The user failed to login within 3 tries. 
+            if (currentUserAccount == -1)
             {
                 return false;
             }
