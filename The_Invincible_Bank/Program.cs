@@ -4,7 +4,10 @@
     {
         static void Main(string[] args)
         {
-            
+            var theBank = new Bank();
+            //theBank.Run();
+
+            UI.DisplayMessage("Ass");
         }
     }
 }

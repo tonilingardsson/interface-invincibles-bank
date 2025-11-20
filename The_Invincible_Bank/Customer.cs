@@ -10,38 +10,22 @@ using System.Threading.Tasks;
 
 namespace The_Invincible_Bank
 {
-    internal class Customer
+    internal class Customer: User
     {
-        private int _securityNumber;
-        private string Password { get; set; }
-        public List<BankAccount> Accounts { get; set; }
+        public List<BankAccount> Accounts { get; private set; }
+        private BankAccount accountOne;
 
-        public int SecurityNumber 
+        public Customer(int securityNumber, string password) 
+            :base (securityNumber, password)
         {
-            get { return _securityNumber;  } 
-        }
-        public Customer(int securityNumber, string password)
-        {
-            SecurityNumber = securityNumber;
-            Password = password;
+            accountOne = new BankAccount("Bank Account", WorldMarket.Currency.Sek, 1234);
+            Accounts = new List<BankAccount> { accountOne };
         }
 
+        //public bool Transfer() //Fråga om bankkonto från, bankkonto till, summa
+        //{
 
-        public bool LogIn(int securityNumber, string password)
-        {
-            if (securityNumber == SecurityNumber)
-            {
-                if (password == Password)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public bool Transfer() //Fråga om bankkonto från, bankkonto till, summa
-        {
-
-        } 
+        //} 
         //{
             //var answer = new Input();
             //Console.WriteLine("Do you want to transfer internal or external?: ");
@@ -121,7 +105,7 @@ namespace The_Invincible_Bank
             //    return true;
             //}
 
-        }
+        //}
 
         public void ShowAccounts() //Visa alla konton med hjälp av UI klassen plz
         {
