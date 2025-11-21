@@ -21,7 +21,7 @@ namespace The_Invincible_Bank
             Console.WriteLine();
 
         }
-        static public void DisplayMessage(string message)
+        static public void DisplayMessage(string message, ConsoleColor frameColor = ConsoleColor.White, ConsoleColor textcolor = ConsoleColor.White)
         {
             string[] lines = message.Split('\n'); //Creates an array with strings
 
@@ -36,27 +36,34 @@ namespace The_Invincible_Bank
             }
 
             //Top row
-            Console.Write("╔");
-            Console.Write(new string('═', maxStringLegnth + padding * 2)); //Creates a string containing ═ with the legnth of the longest string
-            Console.WriteLine("╗");
+            WriteColor("╔", frameColor);
+            WriteColor(new string('═', maxStringLegnth + padding * 2), frameColor); //Creates a string containing ═ with the legnth of the longest string
+            WriteColor("╗\n", frameColor);
 
             foreach (string line in lines)
             {
-                Console.Write("║");
-                Console.Write(new string(' ', padding)); //Creates a new string with the legth of the padding
-                Console.Write(line);
-                Console.Write(new string(' ', (maxStringLegnth - line.Length) + padding)); //adds more or less spaces to the right of the line depending on line legnth
-                Console.WriteLine("║");
+                WriteColor("║", frameColor);
+                WriteColor(new string(' ', padding), frameColor); //Creates a new string with the legth of the padding
+                WriteColor(line, textcolor);
+                WriteColor(new string(' ', (maxStringLegnth - line.Length) + padding), frameColor); //adds more or less spaces to the right of the line depending on line legnth
+                WriteColor("║\n", frameColor);
             }
 
             //Bottom row
-            Console.Write("╚");
-            Console.Write(new string('═', maxStringLegnth + padding * 2)); //Creates a string containing ═ with the legnth of the longest string
-            Console.WriteLine("╝");
+            WriteColor("╚", frameColor);
+            WriteColor(new string('═', maxStringLegnth + padding * 2), frameColor); //Creates a string containing ═ with the legnth of the longest string
+            WriteColor("╝\n", frameColor);
         }
         static public void DisplayFile(string filename)
         {
            
+        }
+
+        static private void WriteColor(string text, ConsoleColor color) //Just makes it easier for me to make the leggies on the player to switch colors
+        {
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ResetColor();
         }
     }
 }
