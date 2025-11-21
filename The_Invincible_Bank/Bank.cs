@@ -166,7 +166,7 @@ namespace The_Invincible_Bank
                 Console.WriteLine("Create a new account or try again?");
                 Console.WriteLine("New account: 1 | Try again: 2");
 
-                if (input.GetNumberFromUser(1, 2) == 1)
+                if (Input.GetNumberFromUser(1, 2) == 1)
                 {
                     UserLogIn();
                 }

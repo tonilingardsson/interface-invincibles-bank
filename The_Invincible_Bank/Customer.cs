@@ -36,126 +36,109 @@ namespace The_Invincible_Bank
             }
             return false;
         }
-        public bool TransferBeetweenAccounts() //Fråga om bankkonto från, bankkonto till, summa
+        public bool TransferBeetweenAccounts()
         {
-            UI.DisplayMessage($"Which account do you want to transfer from?");
-            ShowAccounts();
+            UI.DisplayMessage("Which account do you want to transfer from?");
+            ShowAccounts(); 
+            int fromAccountIndex = Input.GetNumberFromUser(1, Accounts.Count) - 1; 
+            int account1 = Accounts[fromAccountIndex].AccountNumber;
 
-            int fromAccountIndex = Input.GetNumberFromUser(1, Accounts.Count);
-            if (fromAccountIndex < 0 || fromAccountIndex >= Accounts.Count)
-            {
-                UI.DisplayMessage("Invalid account choice");
-                return false;
-            }
-            decimal amount;
-            UI.DisplayMessage("How much do you want to transfer? ");
-            while (!decimal.TryParse(Console.ReadLine(), out amount) || amount > Accounts[fromAccountIndex].Sum)
-            {
-                Console.WriteLine($"You dont have enough funds to transfer {amount:C}");
-            }
+            UI.DisplayMessage($"Available balance: {Accounts[fromAccountIndex].Sum:C}");
+            decimal amount = Input.GetDecimalFromUser();
 
-            bank.CheckSenderAccountValidity(fromAccountIndex, amount);
+            UI.DisplayMessage("Which account do you want to transfer to?");
+            int account2 = bank.GetAccount();
 
-            UI.DisplayMessage($"Which account do you want to transfer from?");
-            ShowAccounts();
-            int toAccountIndex = Input.GetNumberFromUser(1, Accounts.Count);
-            if (toAccountIndex < 0 || fromAccountIndex >= Accounts.Count)
-            {
-                UI.DisplayMessage("Invalid account choice");
-                return false;
-            }
+            return bank.Transfer(account1, account2, amount);
+        }
 
-            if (bank.Transfer(fromAccountIndex,toAccountIndex, amount) == true)
-            {
 
-            }
 
-        } 
 
-        
+
 
         //public bool Transfer() //Fråga om bankkonto från, bankkonto till, summa
         //{
 
         //} 
         //{
-            //var answer = new Input();
-            //Console.WriteLine("Do you want to transfer internal or external?: ");
-            //var transfer = new Input();
-            //Console.WriteLine("1: Internal.\n" +
-            //    "2: External.");
-            //int choice = answer.GetNumberFromUser(1, 2);
-            
-            //if (choice == 1)
-            //{
-            //    while (Accounts.Count > 1)
-            //    {
-            //        int countFrom = 1;
-            //        Console.WriteLine("Which account do you want to transfer from? ");
-            //        foreach (var account in Accounts)
-            //        {
-            //            Console.WriteLine($"{countFrom}: {account.Name} - Balance: {account.Sum:C}");
-            //            countFrom++;
-            //        }
+        //var answer = new Input();
+        //Console.WriteLine("Do you want to transfer internal or external?: ");
+        //var transfer = new Input();
+        //Console.WriteLine("1: Internal.\n" +
+        //    "2: External.");
+        //int choice = answer.GetNumberFromUser(1, 2);
 
-            //        bool hasMoney = false;
-            //        BankAccount fromAccount = new BankAccount();
-            //        int index = -1;
-            //        while (!hasMoney)
-            //        {
-            //            index = answer.GetNumberFromUser(1, Accounts.Count) - 1;
-            //            fromAccount = Accounts[index];
-            //            if (fromAccount.Sum <= 0)
-            //            {
-            //                Console.WriteLine("You have no funds to transfer. Please choose another account");
-            //            }
-            //            else
-            //            {
-            //                hasMoney = true;
-            //            }
-            //        }
+        //if (choice == 1)
+        //{
+        //    while (Accounts.Count > 1)
+        //    {
+        //        int countFrom = 1;
+        //        Console.WriteLine("Which account do you want to transfer from? ");
+        //        foreach (var account in Accounts)
+        //        {
+        //            Console.WriteLine($"{countFrom}: {account.Name} - Balance: {account.Sum:C}");
+        //            countFrom++;
+        //        }
 
-            //        Console.WriteLine("Which account do you want to send to? ");
+        //        bool hasMoney = false;
+        //        BankAccount fromAccount = new BankAccount();
+        //        int index = -1;
+        //        while (!hasMoney)
+        //        {
+        //            index = answer.GetNumberFromUser(1, Accounts.Count) - 1;
+        //            fromAccount = Accounts[index];
+        //            if (fromAccount.Sum <= 0)
+        //            {
+        //                Console.WriteLine("You have no funds to transfer. Please choose another account");
+        //            }
+        //            else
+        //            {
+        //                hasMoney = true;
+        //            }
+        //        }
 
-            //        int countTo = 1;
-            //        foreach (var account in Accounts)
-            //        {
-            //            Console.WriteLine($"{countTo}: {account.Name} - Balance: {account.Sum:C}");
-            //            countTo++;
-            //        }
-            //        var receiver = new Input();
+        //        Console.WriteLine("Which account do you want to send to? ");
+
+        //        int countTo = 1;
+        //        foreach (var account in Accounts)
+        //        {
+        //            Console.WriteLine($"{countTo}: {account.Name} - Balance: {account.Sum:C}");
+        //            countTo++;
+        //        }
+        //        var receiver = new Input();
 
 
-            //        int indexTo = receiver.GetNumberFromUser(1, Accounts.Count) - 1;
-            //        BankAccount toAccount = Accounts[indexTo];
-            //        while (index == indexTo)
-            //        {
-            //            Console.WriteLine("You can't send to the same account");
-            //            indexTo = receiver.GetNumberFromUser(1, Accounts.Count) - 1;
-            //            toAccount = Accounts[indexTo];
-            //        }
+        //        int indexTo = receiver.GetNumberFromUser(1, Accounts.Count) - 1;
+        //        BankAccount toAccount = Accounts[indexTo];
+        //        while (index == indexTo)
+        //        {
+        //            Console.WriteLine("You can't send to the same account");
+        //            indexTo = receiver.GetNumberFromUser(1, Accounts.Count) - 1;
+        //            toAccount = Accounts[indexTo];
+        //        }
 
-            //        decimal amount;
-            //        Console.WriteLine("How much do you want to transfer? ");
-            //        while (!decimal.TryParse(Console.ReadLine(), out amount) || amount > fromAccount.Sum)
-            //        {
-            //            Console.WriteLine($"You dont have enough funds to transfer {amount:C}");
-            //        }
-            //        fromAccount.Sum -= amount;
-            //        toAccount.Sum += amount;
+        //        decimal amount;
+        //        Console.WriteLine("How much do you want to transfer? ");
+        //        while (!decimal.TryParse(Console.ReadLine(), out amount) || amount > fromAccount.Sum)
+        //        {
+        //            Console.WriteLine($"You dont have enough funds to transfer {amount:C}");
+        //        }
+        //        fromAccount.Sum -= amount;
+        //        toAccount.Sum += amount;
 
-            //        return true;
-            //    }
-            //    Console.WriteLine("You cant transfer internal when you only have one account");
-            //    return false;
-                // if we only have one account
-            //}
-            //else
-            //{
-            //    var bank = new Bank();
-            //    bank.TransferBetweenAccounts(1,2);
-            //    return true;
-            //}
+        //        return true;
+        //    }
+        //    Console.WriteLine("You cant transfer internal when you only have one account");
+        //    return false;
+        // if we only have one account
+        //}
+        //else
+        //{
+        //    var bank = new Bank();
+        //    bank.TransferBetweenAccounts(1,2);
+        //    return true;
+        //}
 
         //}
 
