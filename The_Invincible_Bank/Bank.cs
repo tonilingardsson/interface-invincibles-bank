@@ -171,6 +171,13 @@ namespace The_Invincible_Bank
             }
             return userIndex; //Returns index of the user account that is logged in
         }
+
+        public int GetAccount()
+        {
+            int getAccount = Input.GetNumberFromUser(999,10000);
+            return getAccount;
+        }
+
         public bool Run()
         {
             //Koden börjar och slutar här.
