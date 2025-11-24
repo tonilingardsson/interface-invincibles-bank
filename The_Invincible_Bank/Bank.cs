@@ -33,6 +33,7 @@ namespace The_Invincible_Bank
                 if (CheckReceaverAccountValidity(accountTwo))
                 {
                     //Convert
+                    //Bank account stuff
                 }                
             }
             return false;
@@ -58,7 +59,6 @@ namespace The_Invincible_Bank
 
         private bool CheckReceaverAccountValidity(int accountTwo)
         {
-            int counter = 0;
             foreach (Customer accountA in userAccounts) // Steps in to the list of accounts
             {
                 foreach (BankAccount accountB in accountA.Accounts) //Steps in to the list of accounts the user own
@@ -68,7 +68,6 @@ namespace The_Invincible_Bank
                         return true;
                     }
                 }
-                counter++;
             }
             return false; //Retunrar false om kontot inte finns.
         }
@@ -156,7 +155,7 @@ namespace The_Invincible_Bank
 
             while (!exist)
             {
-                UI.DisplayMessage("1: Show Accounts\n2: Cretae new account\n3: Transfer money \n4: Convert account currency\n5: Show account history\n6: Borrow money\n7: Log out");
+                UI.DisplayMessage("1: Show Accounts\n2: Create new account\n3: Transfer money \n4: Convert account currency\n5: Show account history\n6: Borrow money\n7: Log out");
 
                 switch (Input.GetNumberFromUser(1, 7))
                 {
