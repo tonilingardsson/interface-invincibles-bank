@@ -21,19 +21,16 @@ namespace The_Invincible_Bank
             return choice;
         }
         
-        public static decimal GetDecimalFromUser(BankAccount fromAccount)
+        public static decimal GetDecimalFromUser()
         {
             decimal amount;
-            while (!decimal.TryParse(Console.ReadLine(), out amount) || amount <=0 || fromAccount.Sum < amount)
+            while (!decimal.TryParse(Console.ReadLine(), out amount) || amount <=0)
             {
                 if (amount <=0) 
                 {
                     Console.WriteLine($"The amount you want to send must be above zero ");
                 }
-                else if(fromAccount.Sum < amount)
-                {
-                    Console.WriteLine($"You do not have enough funds to send {amount:C}");
-                }
+
             }
             return amount;
         }
