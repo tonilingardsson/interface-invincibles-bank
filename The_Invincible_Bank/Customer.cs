@@ -28,7 +28,7 @@ namespace The_Invincible_Bank
             int countFrom = 1;
             foreach (var account in Accounts)
             {
-                Console.WriteLine($"{countFrom}: {account.Name} - Balance: {account.Sum:C}");
+                UI.DisplayMessage($"{countFrom}: {account.Name}({account.AccountNumber}) - Balance: {account.Sum:C}");
                 countFrom++;
             }
         }
