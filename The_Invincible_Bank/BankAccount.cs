@@ -13,6 +13,8 @@ namespace The_Invincible_Bank
         public WorldMarket.Currency CurrencyType { get; private set; }
         public int AccountNumber { get; private set; }
 
+        private string filePath;
+
         public BankAccount()
         {
 
@@ -23,6 +25,25 @@ namespace The_Invincible_Bank
             Sum = 0m;
             CurrencyType = currencyType;
             AccountNumber = accountNumber;
+            //Create filename based on account number
+            string fileName = $"account_{accountNumber}.txt";
+
+            string projectPath = Directory.GetCurrentDirectory();
+            filePath = Path.Combine(projectPath, fileName);
+
+            CreateAccountFile();
+        }
+        private void CreateAccountFile()
+        {
+            using (StreamWriter sw = File.CreateText(filePath))
+            {
+                sw.WriteLine($"Account Number: {AccountNumber}");
+                sw.WriteLine($"Account Name: {Name}");
+                sw.WriteLine($"Currency Type: {CurrencyType}");
+                sw.WriteLine($"Balance: {Sum} {CurrencyType}");
+                sw.WriteLine($"Account Number: {AccountNumber}");
+            }
+            UI.DisplayMessage($"Account file Created: {filePath}");
         }
     }
 }
