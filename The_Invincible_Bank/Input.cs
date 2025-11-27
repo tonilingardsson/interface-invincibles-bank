@@ -11,12 +11,12 @@ namespace The_Invincible_Bank
         public static int GetNumberFromUser(int min, int max)
         {
             int choice;
-            Console.WriteLine();
-            Console.Write("Your choice: ");
+           
+            UI.DisplayMessage("Your choice: ");
 
             while (!int.TryParse(Console.ReadLine(), out choice) || choice < min || choice > max)
             {
-                Console.WriteLine($"You have to choose between {min} and {max}");
+                UI.DisplayMessage($"You have to choose between {min} and {max}");
             }
             return choice;
         }
@@ -28,7 +28,7 @@ namespace The_Invincible_Bank
             {
                 if (amount <=0) 
                 {
-                    Console.WriteLine($"The amount you want to send must be above zero ");
+                    UI.DisplayMessage($"The amount you want to send must be above zero!");
                 }
 
             }
