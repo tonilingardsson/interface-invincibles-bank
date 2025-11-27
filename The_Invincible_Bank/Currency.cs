@@ -6,29 +6,34 @@ using System.Threading.Tasks;
 
 namespace The_Invincible_Bank
 {
-    public class Currency
+    public static class Currency
     {
-        public enum Currency
+        //public enum Currency
+        //{
+        //    Dollar,
+        //    Euro,
+        //    Sek,
+        //    Pound
+        //}
+
+        private static Dictionary<string, decimal> CurrencyList = new Dictionary<string, decimal>
         {
-            Dollar,
-            Euro,
-            Sek,
-            Pound
-        }
+            { "Sek", 1m },
+            { "Dollar", 9.45m },
+            { "Euro", 10.96m },
+            { "Pound", 12.44m }
+        };
 
-        private Dictionary<Currency, decimal> CurrencyList = new Dictionary<Currency, decimal>();
-        public Currency()
-        {
-            CurrencyList.Add(Currency.Dollar, 9.45m);
-            CurrencyList.Add(Currency.Euro, 10.96m);
-            CurrencyList.Add(Currency.Pound, 12.44m);
-            CurrencyList.Add(Currency.Sek, 1m);
-
-
-        }
+        //public Currency()
+        //{
+        //    CurrencyList.Add(Currency.Dollar, 9.45m);
+        //    CurrencyList.Add(Currency.Euro, 10.96m);
+        //    CurrencyList.Add(Currency.Pound, 12.44m);
+        //    CurrencyList.Add(Currency.Sek, 1m);
+        //}
 
         // Metod för att konvertera en summa från en valuta till en annan
-        public decimal Convert(Currency currentCurrency, Currency newCurrency, decimal sum)
+        public static decimal Convert(string currentCurrency, string newCurrency, decimal sum)
         {
             //Konvertera om summan till det nya formatet
             // Konvertera summan till SEK
@@ -36,19 +41,18 @@ namespace The_Invincible_Bank
 
             //Konvertera från SEK till den nya valutan
             decimal result = inSek / CurrencyList[newCurrency];
-
             return result;
         }
 
         // Metod för att uppdatera valutakurserna med slumpmässiga variationer
-        public void UpdateCurrencyValue()
+        public static void UpdateCurrencyValue()
         {
             //Uppdatera listan med random värden innom en rimlig range av dens standardvärde. 
 
             Random rnd = new Random();
 
             // Loopar igenom alla valutor utom SEK (som alltid är 1)
-            foreach (var currency in new List<Currency> { Currency.Dollar, Currency.Euro, Currency.Pound })
+            foreach (var currency in new List<string> { "Sek", "Dollar", "Euro", "Pound"})
             {
                 decimal currentValue = CurrencyList[currency];
 
@@ -56,15 +60,14 @@ namespace The_Invincible_Bank
                 decimal changePercent = (decimal)(rnd.NextDouble() * 0.10 - 0.05);
 
                 // Uppdaterar värdet med den slumpmässiga förrändringen
-                decimal newValue = currentValue * (1 + changePercent);
+                CurrencyList[currency] = Math.Round(currentValue * (1 + changePercent), 2); // Avrundar till två decimaler
 
-                CurrencyList[currency] = Math.Round(newValue, 2); // Avrundar till två decimaler
             }
 
         }
 
         // Hjälpmetod för att skriva ut aktuella valutakurser
-        public void ShowCurrencies()
+        public static void ShowCurrencies()
         {
             Console.WriteLine("Aktuella valutakurser (relativt SEK):");
             foreach (var kvp in CurrencyList)
