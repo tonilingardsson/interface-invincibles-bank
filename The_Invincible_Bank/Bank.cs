@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Reflection.PortableExecutable;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,102 +12,97 @@ namespace The_Invincible_Bank
 {
     internal class Bank
     {
-        private List<Admin> adminAccounts;
-        private List<Customer> customerAccounts;
-
-        private Admin adminOne;
-        private User userOne;
+        static public List<User> UserAccounts { get; private set; }
 
         private int currentUserAccount = -1;
         
         public Bank()
         {
             var adminOne = new Admin(1111, "1111");
-            var userOne = new Customer(2222, "2222");
+            var customerOne = new Customer(2222, "2222");
+            UserAccounts = new List<User>();
 
-            adminAccounts = new List<Admin>();
-            customerAccounts = new List<Customer>();
-
-            adminAccounts.Add(adminOne);
-            customerAccounts.Add(userOne);
+            UserAccounts.Add(adminOne);
+            UserAccounts.Add(customerOne);
         }
 
-        public bool Transfer(int accountOne, int accountTwo, decimal sum)
+        public void AddUserToList(User user)
+        {
+            UserAccounts.Add(user);
+        }
+        public bool Transfer(int senderAccountNumber, int ReceavingAccountNumber, decimal sum)
         {         
-            if (CheckSenderAccountValidity(accountOne, sum))
+            if (CheckSenderAccountValidity(senderAccountNumber, sum) != null)
             {
-                if (CheckReceaverAccountValidity(accountTwo))
+                if (CheckReceaverAccountValidity(ReceavingAccountNumber) != null)
                 {
-                    //Convert
+                    //Convert money in between accounts
+                    //Create a transfer object 
+                    //Put it in the list of transfers
                 }                
             }
             return false;
         }
 
-        private bool CheckSenderAccountValidity(int accountOne, decimal sum)
+        private BankAccount? CheckSenderAccountValidity(int senderAccountNumber, decimal sum)
         {
+            if (UserAccounts[currentUserAccount] is Customer customer)
+            {
+                foreach (var account in customer.Accounts) //Gets the worth of all the accounts of the current user
+                {
+                    if (account.AccountNumber == senderAccountNumber && account.Sum >= sum)
+                    {
+                        return account;
+                    }
+                }
+            }
+            return null; //Retunerar null ifall kontot antingen inte finns eller inte har tillräckligt mycket pengar.
+        }
+
+        private BankAccount? CheckReceaverAccountValidity(int receavingAccountNumber)
+        {
+            foreach (Customer customerAccount in UserAccounts) // Steps in to the list of accounts
+            {
+                foreach (BankAccount bankAccount in customerAccount.Accounts) //Steps in to the list of accounts the user own
+                {
+                    if (bankAccount.AccountNumber == receavingAccountNumber)
+                    {
+                        return bankAccount;
+                    }
+                }
+            }
+            return null; //Retunrar null om kontot inte finns.
+        }
+
+        public bool Borrow(int bankAccount, decimal sum)
+        {
+            if (CheckAccountBorrowValidity(sum))
+            {
+                //Add to transfer list
+                UI.DisplayMessage("The amount of " + sum + " will be transfered to your account momentarely.\nAn interest of 7% has been applied");
+                return true;
+            }
             
-            foreach (BankAccount account in customerAccounts[currentUserAccount].Accounts) //Checks if the stated account is owned by the user
+            return false;
+        }
+        private bool CheckAccountBorrowValidity(decimal sum)
+        {
+            decimal totalWorth = 0;
+
+            if (UserAccounts[currentUserAccount] is Customer customer)
             {
-                if (account.AccountNumber == accountOne)
+                foreach (var account in customer.Accounts) //Gets the worth of all the accounts of the current user
                 {
-                    if (account.Sum >= sum) //If theres enough money on the account
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    totalWorth += account.Sum;
                 }
             }
-            return false; //Retunerar false ifall kontot antingen inte finns eller inte har tillräckligt mycket pengar.
-        }
-        private bool CheckReceaverAccountValidity(int accountTwo)
-        {
-            int counter = 0;
-            foreach (Customer accountA in customerAccounts) // Steps in to the list of accounts
+
+            if (totalWorth * 5 > sum) //Checks if the the worth is more or less than the borrow amount
             {
-                foreach (BankAccount accountB in customerAccounts[counter].Accounts) //Steps in to the list of accounts the user own
-                {
-                    if (accountB.AccountNumber == accountTwo)
-                    {
-
-                        return true;
-                    }
-                }
-                counter++;
+                return true;
             }
-            return false; //Retunrar false om kontot inte finns.
+            return false;
         }
-
-        public bool Borrow(int bankAccount, decimal amount)
-        {
-            // Låned användaren tar får inte överstiga värdet på ALLA användarens konton. 
-            // Räntan skall vara på 7% 
-            return true;
-        }
-
-        private void CreateNewUser()
-        {
-            int securityNumber = 0;
-            string password = string.Empty;
-
-            Console.WriteLine("Enter your security number. It should contain four digits"); //Replace
-            while (!int.TryParse(Console.ReadLine(), out securityNumber) && securityNumber.ToString().Length != 4)
-            {
-                Console.WriteLine("Please enter a valid security number");
-            }
-
-            Console.WriteLine("Please enter a password");
-            password = Console.ReadLine();
-
-            Customer newAccount = new Customer(securityNumber, password);
-            customerAccounts.Add(new Customer(securityNumber, password));
-
-            Console.WriteLine("Account was created");
-        }
-
         private int UserLogIn() //If this returns -1, the user failed to log in within 3 tries
         {
 
@@ -115,20 +112,27 @@ namespace The_Invincible_Bank
             int userIndex = 0;
             int userLoginTries = 0;
 
-            Console.Write("Security number: ");
+            UI.DisplayMessage("1: Log in\n2: Exit program");
+            if (Input.GetNumberFromUser(1,2) == 2)
+            {
+                return -1;
+            }
+            Console.Clear();
+
+            UI.DisplayMessage("Security number: ");
             while (!int.TryParse(Console.ReadLine(), out inputSecurityNumber) && inputSecurityNumber.ToString().Length != 4)
             {
-                Console.WriteLine("This is not a valid security number, please try again");
+                UI.DisplayMessage("This is not a valid security number, please try again");
             }
 
             //check if account exists in the user account list
-            foreach (var user in customerAccounts)
+            foreach (var user in UserAccounts)
             {               
                 if (user.SecurityNumber == inputSecurityNumber) //If we found the security number in the list of users
                 {                   
                     while (!user.LogIn(inputSecurityNumber,inputPassword)) //As long as the password is wrong
                     {
-                        Console.Write("Password: "); //Replace
+                        UI.DisplayMessage("Password: "); //Replace
 
                         // ---
                         inputPassword = Console.ReadLine();
@@ -137,50 +141,72 @@ namespace The_Invincible_Bank
                         if(!user.LogIn(inputSecurityNumber,inputPassword))
                         {
                             Console.Clear();
-                            Console.WriteLine("Wrong Password"); //Replace
+                            UI.DisplayMessage("Wrong Password"); //Replace
 
                             userLoginTries++;
                             if (userLoginTries == 3)
                             {
-                                Console.WriteLine("You have failed to enter the right credentials too many times.");
-                                Console.WriteLine("Closing system....");
+                                UI.DisplayMessage("You have failed to enter the right credentials too many times.\nClosing system....");
                                 return -1;
                             }
                         }
                     }
                     Console.WriteLine("Welcome!"); //Replace
+                    userIndex = UserAccounts.IndexOf(user);
                     accountExists = true;
                     break;                                   
                 }
             }
             if (!accountExists)
             {
-                Console.WriteLine("This account does not exist in our bank");
-                Console.WriteLine("Create a new account or try again?");
-                Console.WriteLine("New account: 1 | Try again: 2");
+                UI.DisplayMessage("This account does not exist in our bank.\nTry again or exit program?\nTry again: 1 | Exit program: 2");
 
-                if (Input.GetNumberFromUser(1, 2) == 1)
+                if (Input.GetNumberFromUser(1, 2) == 2)
                 {
                     UserLogIn();
                 }
                 else
                 {
-                    CreateNewUser();
-                    UserLogIn();
+                    userIndex = -1;
                 }
             }
             return userIndex; //Returns index of the user account that is logged in
         }
+
+        public int GetAccount()
+        {
+            int getAccount = Input.GetNumberFromUser(999,10000);
+            return getAccount;
+        }
+
         public bool Run()
         {
             //Koden börjar och slutar här.
-            //Logga
-            //Välkommen
-            currentUserAccount =  UserLogIn(); //Logs in to user and sets the current user index
-            if (currentUserAccount == -1) //The user failed to login within 3 tries. 
+            UI.DisplayLoggo();
+            bool exist = false;
+
+            while (!exist)
             {
-                return false;
+                currentUserAccount = UserLogIn(); //Logs in to user and sets the current user index
+                if (currentUserAccount == -1) //The user failed to login within 3 tries. 
+                {
+                    return false;
+                }
+                if (UserAccounts[currentUserAccount] is Customer)
+                {
+                    var customer = UserAccounts[currentUserAccount] as Customer;
+                    UserInterface.CustomerMenu(customer);
+                    currentUserAccount = -2;
+                }
+                else if (UserAccounts[currentUserAccount] is Admin)
+                {
+                    var admin = UserAccounts[currentUserAccount] as Admin;
+                    UserInterface.AdminMenu(admin);
+                    currentUserAccount = -2;
+                }
             }
+
+
             return true;
         }
     }

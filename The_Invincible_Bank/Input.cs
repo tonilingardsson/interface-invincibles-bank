@@ -8,17 +8,32 @@ namespace The_Invincible_Bank
 {
     static class Input
     {
-        static public int GetNumberFromUser(int min, int max)
+        public static int GetNumberFromUser(int min, int max)
         {
             int choice;
-            Console.WriteLine();
-            Console.Write("Ditt val: ");
+           
+            UI.DisplayMessage("Your choice: ");
 
             while (!int.TryParse(Console.ReadLine(), out choice) || choice < min || choice > max)
             {
-                Console.WriteLine($"Du måste välja mellan valen {min} till {max}");
+                UI.DisplayMessage($"You have to choose between {min} and {max}");
             }
             return choice;
         }
+        
+        public static decimal GetDecimalFromUser()
+        {
+            decimal amount;
+            while (!decimal.TryParse(Console.ReadLine(), out amount) || amount <=0)
+            {
+                if (amount <=0) 
+                {
+                    UI.DisplayMessage($"The amount you want to send must be above zero!");
+                }
+
+            }
+            return amount;
+        }
+
     }
 }

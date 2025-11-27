@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,42 +9,61 @@ namespace The_Invincible_Bank
 {
     static class UI
     {
+        private static int padding = 4;
         static public void DisplayLoggo()
         {
-            //Printa ut en logga
+
+            Console.WriteLine("  _____ _            _            _            _ _     _        ____              _    ");
+            Console.WriteLine(" |_   _| |__   ___  (_)_ ____   _(_)_ __   ___(_) |__ | | ___  | __ )  __ _ _ __ | | __");
+            Console.WriteLine("   | | | '_ \\ / _ \\ | | '_ \\ \\ / / | '_ \\ / __| | '_ \\| |/ _ \\ |  _ \\ / _` | '_ \\| |/ /");
+            Console.WriteLine("   | | | | | |  __/ | | | | \\ V /| | | | | (__| | |_) | |  __/ | |_) | (_| | | | |   < ");
+            Console.WriteLine("   |_| |_| |_|\\___| |_|_| |_|\\_/ |_|_| |_|\\___|_|_.__/|_|\\___| |____/ \\__,_|_| |_|_|\\_\\");
+            Console.WriteLine();
+
         }
-        static public void DisplayMessage(string message)
+        static public void DisplayMessage(string message, ConsoleColor frameColor = ConsoleColor.White, ConsoleColor textcolor = ConsoleColor.White)
         {
-            // ---
-            Console.Write("╔");
-            for (int i = 0; i < message.Length + 6; i++) //Adding 6 for window margin
+            string[] lines = message.Split('\n'); //Creates an array with strings
+
+            //Finds the longest string in the array
+            int maxStringLegnth = 0;
+            foreach (string line in lines)
             {
-                Console.Write("═");
+                if (line.Length > maxStringLegnth)
+                {
+                    maxStringLegnth = line.Length;
+                }
             }
-            Console.Write("╗");
-            Console.WriteLine();
-            // ---
-            
-            // ---
-            Console.Write("║   ");
 
-            Console.Write(message);
+            //Top row
+            WriteColor("╔", frameColor);
+            WriteColor(new string('═', maxStringLegnth + padding * 2), frameColor); //Creates a string containing ═ with the legnth of the longest string
+            WriteColor("╗\n", frameColor);
 
-            Console.Write("   ║");
-            // ---
-
-            // ---
-            Console.WriteLine();
-            Console.Write("╚");
-            for (int i = 0; i < message.Length + 6; i++) //Adding 6 for window margin
+            foreach (string line in lines)
             {
-                Console.Write("═");
+                WriteColor("║", frameColor);
+                WriteColor(new string(' ', padding), frameColor); //Creates a new string with the legth of the padding
+                WriteColor(line, textcolor);
+                WriteColor(new string(' ', (maxStringLegnth - line.Length) + padding), frameColor); //adds more or less spaces to the right of the line depending on line legnth
+                WriteColor("║\n", frameColor);
             }
-            Console.Write("╝");
+
+            //Bottom row
+            WriteColor("╚", frameColor);
+            WriteColor(new string('═', maxStringLegnth + padding * 2), frameColor); //Creates a string containing ═ with the legnth of the longest string
+            WriteColor("╝\n", frameColor);
         }
         static public void DisplayFile(string filename)
         {
            
+        }
+
+        static private void WriteColor(string text, ConsoleColor color) //Just makes it easier for me to make the leggies on the player to switch colors
+        {
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ResetColor();
         }
     }
 }
