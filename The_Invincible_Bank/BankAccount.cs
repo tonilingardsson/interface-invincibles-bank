@@ -11,13 +11,13 @@ namespace The_Invincible_Bank
         public string Name { get; private set; } = string.Empty;
         public decimal Sum { get; private set; } = 0;
         public WorldMarket.Currency CurrencyType { get; private set; }
-        public int AccountNumber { get; private set; }
+        public string AccountNumber { get; private set; }
 
         public BankAccount()
         {
 
         }
-        public BankAccount(string name, WorldMarket.Currency currencyType, int accountNumber)
+        public BankAccount(string name, WorldMarket.Currency currencyType, string accountNumber)
         {
             Name = name;
             Sum = 0m;

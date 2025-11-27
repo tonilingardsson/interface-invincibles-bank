@@ -30,7 +30,7 @@ namespace The_Invincible_Bank
         {
             UserAccounts.Add(user);
         }
-        public bool Transfer(int senderAccountNumber, int ReceavingAccountNumber, decimal sum)
+        public bool Transfer(string senderAccountNumber, string ReceavingAccountNumber, decimal sum)
         {         
             if (CheckSenderAccountValidity(senderAccountNumber, sum) != null)
             {
@@ -44,7 +44,7 @@ namespace The_Invincible_Bank
             return false;
         }
 
-        private BankAccount? CheckSenderAccountValidity(int senderAccountNumber, decimal sum)
+        private BankAccount? CheckSenderAccountValidity(string senderAccountNumber, decimal sum)
         {
             if (UserAccounts[currentUserAccount] is Customer customer)
             {
@@ -59,7 +59,7 @@ namespace The_Invincible_Bank
             return null; //Retunerar null ifall kontot antingen inte finns eller inte har tillräckligt mycket pengar.
         }
 
-        private BankAccount? CheckReceaverAccountValidity(int receavingAccountNumber)
+        private BankAccount? CheckReceaverAccountValidity(string receavingAccountNumber)
         {
             foreach (Customer customerAccount in UserAccounts) // Steps in to the list of accounts
             {
