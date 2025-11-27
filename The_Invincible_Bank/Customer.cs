@@ -18,7 +18,7 @@ namespace The_Invincible_Bank
         public Customer(int securityNumber, string password)
             : base(securityNumber, password)
         {
-            accountOne = new BankAccount("Bank Account", WorldMarket.Currency.Sek, 1234);
+            accountOne = new BankAccount("Bank Account", "Sek", 1234);
             Accounts = new List<BankAccount> { accountOne };
         }
 
@@ -39,14 +39,14 @@ namespace The_Invincible_Bank
             //Använd dig av UI filen
         }
 
-        public void ConvertAccountCurrency(int bankAccount, WorldMarket.Currency currencyToConvertTo)
+        public void ConvertAccountCurrency(int bankAccount, string currencyToConvertTo)
         {
             //Konvertera om ett konto till den nya valutan igenom att
             //1: konvertera valutan
             //2: ändra valuta typ på kontot.
         }
 
-        public void CreateBankAccount(string accountName, WorldMarket.Currency currencyType)
+        public void CreateBankAccount(string accountName, string currencyType)
         {
             //Creates and adds a new account to the account list. 
             //Make sure to generate a bank account number that does not already EXSIST IN THE LIST!
