@@ -11,7 +11,7 @@ namespace The_Invincible_Bank
         public string Name { get; private set; } = string.Empty;
         public decimal Sum { get; private set; } = 0;
         public string CurrencyType { get; private set; }
-        public int AccountNumber { get; private set; }
+        public string AccountNumber { get; private set; }
 
         public BankAccount()
         {

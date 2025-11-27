@@ -18,7 +18,7 @@ namespace The_Invincible_Bank
         public Customer(int securityNumber, string password)
             : base(securityNumber, password)
         {
-            accountOne = new BankAccount("Bank Account", "Sek", 1234);
+            accountOne = new BankAccount("Bank Account", "Sek", "1234");
             Accounts = new List<BankAccount> { accountOne };
         }
 
