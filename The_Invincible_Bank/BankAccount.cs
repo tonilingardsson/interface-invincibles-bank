@@ -17,7 +17,7 @@ namespace The_Invincible_Bank
         {
 
         }
-        public BankAccount(string name, string currencyType, int accountNumber)
+        public BankAccount(string name, string currencyType, string accountNumber)
         {
             Name = name;
             Sum = 0m;
