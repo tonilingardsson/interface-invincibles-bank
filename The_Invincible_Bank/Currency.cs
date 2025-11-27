@@ -8,14 +8,6 @@ namespace The_Invincible_Bank
 {
     public static class Currency
     {
-        //public enum Currency
-        //{
-        //    Dollar,
-        //    Euro,
-        //    Sek,
-        //    Pound
-        //}
-
         private static Dictionary<string, decimal> CurrencyList = new Dictionary<string, decimal>
         {
             { "Sek", 1m },
@@ -23,14 +15,6 @@ namespace The_Invincible_Bank
             { "Euro", 10.96m },
             { "Pound", 12.44m }
         };
-
-        //public Currency()
-        //{
-        //    CurrencyList.Add(Currency.Dollar, 9.45m);
-        //    CurrencyList.Add(Currency.Euro, 10.96m);
-        //    CurrencyList.Add(Currency.Pound, 12.44m);
-        //    CurrencyList.Add(Currency.Sek, 1m);
-        //}
 
         // Metod för att konvertera en summa från en valuta till en annan
         public static decimal Convert(string currentCurrency, string newCurrency, decimal sum)
@@ -61,9 +45,7 @@ namespace The_Invincible_Bank
 
                 // Uppdaterar värdet med den slumpmässiga förrändringen
                 CurrencyList[currency] = Math.Round(currentValue * (1 + changePercent), 2); // Avrundar till två decimaler
-
             }
-
         }
 
         // Hjälpmetod för att skriva ut aktuella valutakurser
@@ -76,6 +58,5 @@ namespace The_Invincible_Bank
             }
             Console.WriteLine();
         }
-
     }
 }
