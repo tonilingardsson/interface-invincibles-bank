@@ -43,7 +43,7 @@ namespace The_Invincible_Bank
                 sw.WriteLine($"Balance: {Sum} {CurrencyType}");
                 sw.WriteLine($"--- Transactions history --- ");
             }
-            UI.DisplayMessage($"Account file Created: {filePath}");
+           
         }
 
         public void Deposit(decimal amount)
