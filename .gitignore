@@ -428,3 +428,6 @@ FodyWeavers.xsd
 *.msp
 
 .fake
+
+# Only for rich Mac users
+.DS_Store

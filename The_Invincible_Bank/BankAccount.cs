@@ -12,6 +12,8 @@ namespace The_Invincible_Bank
         public decimal Sum { get; private set; } = 0;
         public WorldMarket.Currency CurrencyType { get; private set; }
         public int AccountNumber { get; private set; }
+        // Lägger till en ny egenskap till räntan
+        public decimal InterestRate { get; private set; }
 
         public BankAccount()
         {
@@ -23,6 +25,8 @@ namespace The_Invincible_Bank
             Sum = 0m;
             CurrencyType = currencyType;
             AccountNumber = accountNumber;
+            // Sätter räntan till 1% i constructor
+            InterestRate = 0.01m;
         }
     }
 }

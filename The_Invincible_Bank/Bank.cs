@@ -166,7 +166,7 @@ namespace The_Invincible_Bank
 
                         break;
                     case 2:
-                        //customer.CreateBankAccount(Input.GetString(), Input.GetCurrency());
+                        customer.CreateBankAccount(Input.GetString(), Input.GetCurrency());
                         break;
                     case 3:
                         //customer.Transfer();
