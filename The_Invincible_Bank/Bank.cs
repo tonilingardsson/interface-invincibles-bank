@@ -15,7 +15,8 @@ namespace The_Invincible_Bank
         static public List<User> UserAccounts { get; private set; }
 
         private int currentUserAccount = -1;
-        
+        // Holds the all the transfers
+        private List<Transfer> ListOfTransfers = new List<Transfer>();
         public Bank()
         {
             var adminOne = new Admin(1111, "1111");
@@ -30,18 +31,102 @@ namespace The_Invincible_Bank
         {
             UserAccounts.Add(user);
         }
-        public bool Transfer(string senderAccountNumber, string ReceavingAccountNumber, decimal sum)
-        {         
-            if (CheckSenderAccountValidity(senderAccountNumber, sum) != null)
+        public bool Transfer(string senderAccountNumber, string receavingAccountNumber, decimal sum)
+        {
+            BankAccount senderAccount = CheckSenderAccountValidity(senderAccountNumber, sum);
+            BankAccount receiverAccount = CheckReceaverAccountValidity(receavingAccountNumber);
+
+            if (senderAccount != null && receiverAccount != null)
             {
-                if (CheckReceaverAccountValidity(ReceavingAccountNumber) != null)
-                {
-                    //Convert money in between accounts
-                    //Create a transfer object 
-                    //Put it in the list of transfers
-                }                
+                //  Get currency types from both accounts
+                string fromCurrency = senderAccount.CurrencyType.ToString();
+                string toCurrency = receiverAccount.CurrencyType.ToString();
+
+                //  Create a transfer object
+                Transfer newTransfer = new Transfer(
+                    senderAccountNumber,
+                    receavingAccountNumber,
+                    sum,
+                    fromCurrency,
+                    toCurrency
+                );
+
+                //Add it to the list of transfers
+                ListOfTransfers.Add(newTransfer);
+                return true;
             }
+            UI.DisplayMessage("Transfer failed: Invalid sender or receiver account.");
             return false;
+
+        }
+        private BankAccount FindBankAccountByNumber(string accountNumber)
+        {
+            foreach (User user in UserAccounts)
+            {
+                if (user is Customer customer)
+                {
+                    foreach (BankAccount account in customer.Accounts)
+                    {
+                        if (account.AccountNumber == accountNumber)
+                        {
+                            return account;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public void ProcessTransfers()
+        {
+            UI.DisplayMessage("\n=== Processing All Transfers ===");
+
+            // Loop through each transfer in the list
+            foreach (Transfer transfer in ListOfTransfers)
+            {
+                // Find the sender account
+                BankAccount senderAccount = FindBankAccountByNumber(transfer.FromAccountId);
+
+                // Find the receiver account
+                BankAccount receiverAccount = FindBankAccountByNumber(transfer.ToAccountId);
+
+                if (senderAccount != null && receiverAccount != null)
+                {
+                    // Check if sender has enough money
+                    if (senderAccount.Sum >= transfer.Amount)
+                    {
+                        // 1. Withdraw from sender
+                        senderAccount.Withdraw(transfer.Amount);
+
+                        // 2. Deposit to receiver
+                        receiverAccount.Deposit(transfer.Amount);
+
+                        // 3. Write transaction history to BOTH account files
+                        senderAccount.WriteToFile(
+                            $"Transferred {transfer.Amount} {transfer.CurrencyType} to account {transfer.ToAccountId}"
+                        );
+
+                        receiverAccount.WriteToFile(
+                            $"Received {transfer.Amount} {transfer.CurrencyType} from account {transfer.FromAccountId}"
+                        );
+
+                        UI.DisplayMessage($"Transfer completed: {transfer}");
+                    }
+                    else
+                    {
+                        UI.DisplayMessage($"Transfer failed: Insufficient funds in account {transfer.FromAccountId}");
+                    }
+                }
+                else
+                {
+                    UI.DisplayMessage($"Transfer failed: Account not found");
+                }
+            }
+
+            // 4. Empty the list after processing all transfers
+            ListOfTransfers.Clear();
+
+            UI.DisplayMessage("=== All Transfers Processed ===\n");
         }
 
         private BankAccount? CheckSenderAccountValidity(string senderAccountNumber, decimal sum)
