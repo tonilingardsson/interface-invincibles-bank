@@ -10,10 +10,17 @@ namespace The_Invincible_Bank
     {
         public string Name { get; private set; } = string.Empty;
         public decimal Sum { get; private set; } = 0;
-        public string CurrencyType { get; private set; }
-        public string AccountNumber { get; private set; }
+
+        // Toni: jag hämtar currency från WorldMarket och använder int till AccountNumber
+        // Gammal -> public string CurrencyType { get; private set; }
+        public WorldMarket.Currency CurrencyType { get; private set; }
+        // Gammal -> public string AccountNumber { get; private set; }
+        public int AccountNumber { get; private set; }
+        // Lägger till en ny egenskap till räntan
+        public decimal InterestRate { get; private set; }
 
         private string filePath;
+
 
         public BankAccount()
         {
@@ -25,7 +32,7 @@ namespace The_Invincible_Bank
             Sum = 0m;
             CurrencyType = currencyType;
             AccountNumber = accountNumber;
-            //Create filename based on account number
+
             string fileName = $"account_{accountNumber}.txt";
 
             string projectPath = Directory.GetCurrentDirectory();
@@ -73,6 +80,10 @@ namespace The_Invincible_Bank
             {
                 sw.WriteLine($"{DateTime.Now}: {transactionInfo}");
             }
+
+            // Sätter räntan till 1% i constructor
+            InterestRate = 0.01m;
+
         }
     }
 }

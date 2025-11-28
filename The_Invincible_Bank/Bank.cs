@@ -188,6 +188,90 @@ namespace The_Invincible_Bank
             }
             return false;
         }
+        private void CreateNewUser()
+        {
+            int securityNumber = 0;
+            string password = string.Empty;
+
+            UI.DisplayMessage("Enter your security number. It should contain four digits");
+
+            while (!int.TryParse(Console.ReadLine(), out securityNumber) && securityNumber.ToString().Length != 4)
+            {
+                UI.DisplayMessage("Please enter a valid security number");
+            }
+
+            UI.DisplayMessage("Please enter a password");
+            password = Console.ReadLine();
+
+            Customer newAccount = new Customer(securityNumber, password);
+            userAccounts.Add(new Customer(securityNumber, password));
+
+            UI.DisplayMessage("Account was created");
+        }
+
+        private void adminMenu()
+        {
+            var admin = userAccounts[currentUserAccount] as Admin;
+            bool exist = false;
+
+            while (!exist)
+            {
+                UI.DisplayMessage("1: Create new user\n2: Update currency value\n3: Log out");
+
+                switch (Input.GetNumberFromUser(1,3))
+                {
+                    case 1:
+                        CreateNewUser();
+                        break;
+                    case 2:
+                        //Currency.ShowCurrencyValues()
+                        //Currency.UpdateCurrency();
+                        //Currency.ShowCurrencyValues()
+                        break;
+                    case 3:
+                        exist = true;
+                        break;
+                }
+            }
+
+        }
+        private void customerMenu()
+        {
+            var customer = userAccounts[currentUserAccount] as Customer;
+            bool exist = false;
+
+            while (!exist)
+            {
+                UI.DisplayMessage("1: Show Accounts\n2: Cretae new account\n3: Transfer money \n4: Convert account currency\n5: Show account history\n6: Borrow money\n7: Log out");
+
+                switch (Input.GetNumberFromUser(1, 7))
+                {
+                    case 1:
+                        customer.ShowAccounts();
+
+                        break;
+                    case 2:
+                        //customer.CreateBankAccount(Input.GetString(), Input.GetCurrency());
+                        break;
+                    case 3:
+                        //customer.Transfer();
+                        break;
+                    case 4:
+                        //customer.ConvertAccountCurrency(Input.getBankAccount(), Input.getCurrency())
+                        break;
+                    case 5:
+                        customer.ShowAccounts();
+                        //customer.ShowAccountHistory(Input.getBankAccount());
+                        break;
+                    case 6:
+                        //Borrow(Input.getBankAccount(), Input.GetDecimalFromUser());
+                        break;
+                    case 7:
+                        exist = true;
+                        break;
+                }
+            }
+        }
         private int UserLogIn() //If this returns -1, the user failed to log in within 3 tries
         {
 

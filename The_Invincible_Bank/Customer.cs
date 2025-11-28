@@ -15,10 +15,15 @@ namespace The_Invincible_Bank
         public List<BankAccount> Accounts { get; private set; }
         private BankAccount accountOne;
 
+        // Ange kontot ett ID som kan räknas upp när man skapar nästa kontot
+        private static int nextAccountNumber = 1000;
+
         public Customer(int securityNumber, string password)
             : base(securityNumber, password)
         {
-            accountOne = new BankAccount("Bank Account", "Sek", "1234");
+
+            accountOne = new BankAccount("Bank Account", WorldMarket.Currency.Sek, nextAccountNumber++);
+
             Accounts = new List<BankAccount> { accountOne };
         }
 
@@ -28,7 +33,18 @@ namespace The_Invincible_Bank
             int countFrom = 1;
             foreach (var account in Accounts)
             {
-                UI.DisplayMessage($"{countFrom}: {account.Name}({account.AccountNumber}) - Balance: {account.Sum:C}");
+
+                // Visa valutassymbol till varje konto
+        string currencySymbol = account.CurrencyType switch
+        {
+            WorldMarket.Currency.Sek => "kr",
+            WorldMarket.Currency.Dollar => "$",
+            WorldMarket.Currency.Euro => "€",
+            WorldMarket.Currency.Pound => "£",
+            _ => ""
+        };
+        
+                UI.DisplayMessage($"{countFrom}: {account.Name} - Balance: {account.Sum}{currencySymbol}");
                 countFrom++;
             }
         }
@@ -48,8 +64,14 @@ namespace The_Invincible_Bank
 
         public void CreateBankAccount(string accountName, string currencyType)
         {
-            //Creates and adds a new account to the account list. 
-            //Make sure to generate a bank account number that does not already EXSIST IN THE LIST!
+            // Sätter ett unik kontonummer genom nextAccountNumber
+            int accountNumber = nextAccountNumber++; 
+            // Skapar ett nytt konto
+            BankAccount newAccount = new BankAccount(accountName, currencyType, accountNumber);
+            // Lägger till kontot till kontolistan
+            Accounts.Add(newAccount);
+            // Konfirmationsmeddelande till user
+            UI.DisplayMessage($"Account '{accountName}' created with number {accountNumber}");
             //Användaren ska även få en ränta på sitt nya konto. 1%
         }
     }

@@ -429,5 +429,5 @@ FodyWeavers.xsd
 
 .fake
 
-# Only for "rich" Mac users xD
+# Only for Mac users
 .DS_Store
