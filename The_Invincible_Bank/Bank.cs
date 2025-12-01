@@ -19,7 +19,7 @@ namespace The_Invincible_Bank
         private List<Transfer> ListOfTransfers = new List<Transfer>();
         public Bank()
         {
-            var adminOne = new Admin(1111, "1111");
+            var adminOne = new Admin(1111, "1111");//test
             var customerOne = new Customer(2222, "2222");
             UserAccounts = new List<User>();
 
