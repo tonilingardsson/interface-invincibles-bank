@@ -427,4 +427,6 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
-.fake
+
+# For Mac users
+.DS_Store
