@@ -84,18 +84,18 @@ namespace The_Invincible_Bank
             {
 
                 // 1. Withdraw from sender
-                transfer.senderAccount.Withdraw(transfer.Amount);
+                transfer.FromAccount.Withdraw(transfer.Amount);
 
                 // 2. Deposit to receiver
-                transfer.receiverAccount.Deposit(transfer.Amount);
+                transfer.ToAccount.Deposit(transfer.Amount);
 
                 // 3. Write transaction history to BOTH account files
-                transfer.senderAccount.WriteToFile(
-                    $"Transferred {transfer.Amount} {transfer.CurrencyType} to account {transfer.ToAccountId}"
+                transfer.FromAccount.WriteToFile(
+                    $"Transferred {transfer.Amount} {transfer.CurrencyType} to account {transfer.FromAccount.AccountNumber}"
                 );
 
-                transfer.receiverAccount.WriteToFile(
-                    $"Received {transfer.Amount} {transfer.CurrencyType} from account {transfer.FromAccountId}"
+                transfer.ToAccount.WriteToFile(
+                    $"Received {transfer.Amount} {transfer.CurrencyType} from account {transfer.ToAccount.AccountNumber}"
                 );
 
                 UI.DisplayMessage($"Transfer completed: {transfer}");
