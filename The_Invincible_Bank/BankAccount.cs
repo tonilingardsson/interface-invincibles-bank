@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace The_Invincible_Bank
 {
-    internal class BankAccount
+    public class BankAccount
     {
         public string Name { get; private set; } = string.Empty;
         public decimal Sum { get; private set; } = 0;
