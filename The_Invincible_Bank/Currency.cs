@@ -51,14 +51,7 @@ namespace The_Invincible_Bank
         // Hjälpmetod för att skriva ut aktuella valutakurser
         public static void ShowCurrencies()
         {
-            //    Console.WriteLine("Aktuella valutakurser (relativt SEK):");
-            //    foreach (var kvp in CurrencyList)
-            //    {
-            //        Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-            //    }
-            //    Console.WriteLine();
-
-            UI.DisplayMessage("..............");
+            UI.DisplayMessage("Current exchange rates (relative to SEK):");
             foreach (var kvp in CurrencyList)
             {
                 UI.DisplayMessage($"{kvp.Key}: {kvp.Value}");
