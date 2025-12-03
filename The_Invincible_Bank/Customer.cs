@@ -37,21 +37,21 @@ namespace The_Invincible_Bank
         public void TransferMoney()
         {
             UI.DisplayMessage("1: Which account do you want to withdraw from?");
-            //int senderAccount = Input.GetAccountNumberFromUser();
+            //BankAccount senderAccount = Bank.GetBankAccountByNumber(Input.GetBankAccountNumberFromUser());
             Console.Clear();
             UI.DisplayMessage("2: Which account do you want to deposit to?");
             Console.Clear();
-            //int ReceaverAccount = Input.GetAccountNumberFromUser();
+            //BankAccount ReceaverAccount = Bank.GetBankAccountByNumber(Input.GetBankAccountNumberFromUser());
             UI.DisplayMessage("How much money do you want to send?");
             decimal amount = Input.GetDecimalFromUser();
 
             //Bank.Transfer(senderAccount, ReceaverAccount, amount);
         }
 
-        public void ShowAccountHistory(int bankAccount)
+        public void ShowAccountHistory(BankAccount bankAccount)
         {
-            //Visa kontots överföringshistorik. Vi kan använda oss av en textfil här
-            //Använd dig av UI filen
+            UI.DisplayMessage("Transaction history for account:");
+            UI.DisplayFile(bankAccount.FilePath);
         }
 
         public void ConvertAccountCurrency(int bankAccount, string currencyToConvertTo)
