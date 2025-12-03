@@ -36,7 +36,7 @@ namespace The_Invincible_Bank
             Random rnd = new Random();
 
             // Loopar igenom alla valutor utom SEK (som alltid är 1)
-            foreach (var currency in new List<string> { "Sek", "Dollar", "Euro", "Pound"})
+            foreach (var currency in new List<string> { "Sek", "Dollar", "Euro", "Pound" })
             {
                 decimal currentValue = CurrencyList[currency];
 
@@ -51,12 +51,20 @@ namespace The_Invincible_Bank
         // Hjälpmetod för att skriva ut aktuella valutakurser
         public static void ShowCurrencies()
         {
-            Console.WriteLine("Aktuella valutakurser (relativt SEK):");
+            //    Console.WriteLine("Aktuella valutakurser (relativt SEK):");
+            //    foreach (var kvp in CurrencyList)
+            //    {
+            //        Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+            //    }
+            //    Console.WriteLine();
+
+            UI.DisplayMessage("..............");
             foreach (var kvp in CurrencyList)
             {
-                Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+                UI.DisplayMessage($"{kvp.Key}: {kvp.Value}");
             }
-            Console.WriteLine();
+
         }
     }
 }
+
