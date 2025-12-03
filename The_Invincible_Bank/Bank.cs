@@ -14,9 +14,9 @@ namespace The_Invincible_Bank
     {
         static public List<User> UserAccounts { get; private set; }
 
-        private int currentUserAccount = -1;
+        static private int currentUserAccount = -1;
         // Holds the all the transfers
-        private List<Transfer> ListOfTransfers = new List<Transfer>();
+        static private List<Transfer> ListOfTransfers = new List<Transfer>();
         public Bank()
         {
             var adminOne = new Admin(1111, "1111");//test
@@ -31,12 +31,28 @@ namespace The_Invincible_Bank
         {
             UserAccounts.Add(user);
         }
-        public bool Transfer(string senderAccountNumber, string receavingAccountNumber, decimal sum)
-        {
-            BankAccount senderAccount = CheckSenderAccountValidity(senderAccountNumber, sum);
-            BankAccount receiverAccount = CheckReceaverAccountValidity(receavingAccountNumber);
 
-            if (senderAccount != null && receiverAccount != null)
+        static public BankAccount? GetBankAccountByNumber(string bankAccountNumber)
+        {
+            foreach (Customer customerAccount in UserAccounts) // Steps in to the list of accounts
+            {
+                foreach (BankAccount bankAccount in customerAccount.Accounts) //Steps in to the list of accounts the user own
+                {
+                    if (bankAccount.AccountNumber == bankAccountNumber)
+                    {
+                        return bankAccount;
+                    }
+                }
+            }
+            return null; //Returns null if the account does not exist
+        }
+
+        public static bool Transfer(string senderAccountNumber, string receavingAccountNumber, decimal sum)
+        {
+            BankAccount senderAccount = GetBankAccountByNumber(senderAccountNumber);
+            BankAccount receiverAccount = GetBankAccountByNumber(receavingAccountNumber);
+
+            if (senderAccount != null && receiverAccount != null && CheckFounds(senderAccount, sum) && CheckIfOwnerOfThisAccount(senderAccount))
             {
                 //  Get currency types from both accounts
                 string fromCurrency = senderAccount.CurrencyType.ToString();
@@ -47,7 +63,6 @@ namespace The_Invincible_Bank
                     senderAccount,
                     receiverAccount,
                     sum
-
                 );
 
                 //Add it to the list of transfers
@@ -57,23 +72,6 @@ namespace The_Invincible_Bank
             UI.DisplayMessage("Transfer failed: Invalid sender or receiver account.");
             return false;
 
-        }
-        private BankAccount FindBankAccountByNumber(string accountNumber)
-        {
-            foreach (User user in UserAccounts)
-            {
-                if (user is Customer customer)
-                {
-                    foreach (BankAccount account in customer.Accounts)
-                    {
-                        if (account.AccountNumber == accountNumber)
-                        {
-                            return account;
-                        }
-                    }
-                }
-            }
-            return null;
         }
         public void ProcessTransfers()
         {
@@ -108,34 +106,27 @@ namespace The_Invincible_Bank
             }
         }
 
-        private BankAccount? CheckSenderAccountValidity(string senderAccountNumber, decimal sum)
+        static private bool CheckFounds(BankAccount senderAccount, decimal sum)
         {
-            if (UserAccounts[currentUserAccount] is Customer customer)
+            if (senderAccount.Sum >= sum)
             {
-                foreach (var account in customer.Accounts) //Gets the worth of all the accounts of the current user
-                {
-                    if (account.AccountNumber == senderAccountNumber && account.Sum >= sum)
-                    {
-                        return account;
-                    }
-                }
+                return true;
             }
-            return null; //Retunerar null ifall kontot antingen inte finns eller inte har tillräckligt mycket pengar.
+            return false; //Returns false if the account does not have enough money on it
         }
 
-        private BankAccount? CheckReceaverAccountValidity(string receavingAccountNumber)
+        static private bool CheckIfOwnerOfThisAccount(BankAccount senderAccount)
         {
-            foreach (Customer customerAccount in UserAccounts) // Steps in to the list of accounts
+            var customer = UserAccounts[currentUserAccount] as Customer;
+
+            foreach (BankAccount account in customer.Accounts) // Steps in to the list of accounts
             {
-                foreach (BankAccount bankAccount in customerAccount.Accounts) //Steps in to the list of accounts the user own
+                if (senderAccount == account)
                 {
-                    if (bankAccount.AccountNumber == receavingAccountNumber)
-                    {
-                        return bankAccount;
-                    }
+                    return true;
                 }
             }
-            return null; //Retunrar null om kontot inte finns.
+            return false; //Returns false if the account is not owned by the sender.
         }
 
         public bool Borrow(int bankAccount, decimal sum)
@@ -259,13 +250,13 @@ namespace The_Invincible_Bank
                 if (UserAccounts[currentUserAccount] is Customer)
                 {
                     var customer = UserAccounts[currentUserAccount] as Customer;
-                    UserInterface.CustomerMenu(customer);
+                    Menu.CustomerMenu(customer);
                     currentUserAccount = -2;
                 }
                 else if (UserAccounts[currentUserAccount] is Admin)
                 {
                     var admin = UserAccounts[currentUserAccount] as Admin;
-                    UserInterface.AdminMenu(admin);
+                    Menu.AdminMenu(admin);
                     currentUserAccount = -2;
                 }
             }

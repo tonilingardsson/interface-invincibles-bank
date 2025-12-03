@@ -13,7 +13,7 @@ namespace The_Invincible_Bank
         public string CurrencyType { get; private set; }
         public string AccountNumber { get; private set; }
 
-        private string filePath;
+        public string FilePath { get; private set; }
 
         public BankAccount()
         {
@@ -29,13 +29,13 @@ namespace The_Invincible_Bank
             string fileName = $"account_{accountNumber}.txt";
 
             string projectPath = Directory.GetCurrentDirectory();
-            filePath = Path.Combine(projectPath, fileName);
+            FilePath = Path.Combine(projectPath, fileName);
 
             CreateAccountFile();
         }
         private void CreateAccountFile()
         {
-            using (StreamWriter sw = File.CreateText(filePath))
+            using (StreamWriter sw = File.CreateText(FilePath))
             {
                 sw.WriteLine($"Account Number: {AccountNumber}");
                 sw.WriteLine($"Account Name: {Name}");
@@ -71,7 +71,7 @@ namespace The_Invincible_Bank
 
         public void WriteToFile(string transactionInfo)
         {
-            using (StreamWriter sw = File.AppendText(filePath))
+            using (StreamWriter sw = File.AppendText(FilePath))
             {
                 sw.WriteLine($"{DateTime.Now}: {transactionInfo}");
             }

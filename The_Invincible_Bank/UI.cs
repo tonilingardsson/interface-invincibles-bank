@@ -56,7 +56,7 @@ namespace The_Invincible_Bank
         }
         static public void DisplayFile(string filename)
         {
-           
+            UI.DisplayMessage(File.ReadAllText(filename));
         }
 
         static private void WriteColor(string text, ConsoleColor color) //Just makes it easier for me to make the leggies on the player to switch colors
@@ -64,6 +64,11 @@ namespace The_Invincible_Bank
             Console.ForegroundColor = color;
             Console.Write(text);
             Console.ResetColor();
+        }
+        static public void WriteContinueMessage()
+        {
+            UI.DisplayMessage("Press any key to continue...", ConsoleColor.DarkGray, ConsoleColor.DarkGray);
+            Console.ReadKey();
         }
     }
 }
