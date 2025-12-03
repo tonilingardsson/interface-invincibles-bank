@@ -44,11 +44,10 @@ namespace The_Invincible_Bank
 
                 //  Create a transfer object
                 Transfer newTransfer = new Transfer(
-                    senderAccountNumber,
-                    receavingAccountNumber,
-                    sum,
-                    fromCurrency,
-                    toCurrency
+                    senderAccount,
+                    receiverAccount,
+                    sum
+
                 );
 
                 //Add it to the list of transfers
@@ -76,7 +75,6 @@ namespace The_Invincible_Bank
             }
             return null;
         }
-
         public void ProcessTransfers()
         {
             UI.DisplayMessage("\n=== Processing All Transfers ===");
@@ -84,49 +82,30 @@ namespace The_Invincible_Bank
             // Loop through each transfer in the list
             foreach (Transfer transfer in ListOfTransfers)
             {
-                // Find the sender account
-                BankAccount senderAccount = FindBankAccountByNumber(transfer.FromAccountId);
 
-                // Find the receiver account
-                BankAccount receiverAccount = FindBankAccountByNumber(transfer.ToAccountId);
+                // 1. Withdraw from sender
+                transfer.FromAccount.Withdraw(transfer.Amount);
 
-                if (senderAccount != null && receiverAccount != null)
-                {
-                    // Check if sender has enough money
-                    if (senderAccount.Sum >= transfer.Amount)
-                    {
-                        // 1. Withdraw from sender
-                        senderAccount.Withdraw(transfer.Amount);
+                // 2. Deposit to receiver
+                transfer.ToAccount.Deposit(transfer.Amount);
 
-                        // 2. Deposit to receiver
-                        receiverAccount.Deposit(transfer.Amount);
+                // 3. Write transaction history to BOTH account files
+                transfer.FromAccount.WriteToFile(
+                    $"Transferred {transfer.Amount} {transfer.CurrencyType} to account {transfer.FromAccount.AccountNumber}"
+                );
 
-                        // 3. Write transaction history to BOTH account files
-                        senderAccount.WriteToFile(
-                            $"Transferred {transfer.Amount} {transfer.CurrencyType} to account {transfer.ToAccountId}"
-                        );
+                transfer.ToAccount.WriteToFile(
+                    $"Received {transfer.Amount} {transfer.CurrencyType} from account {transfer.ToAccount.AccountNumber}"
+                );
 
-                        receiverAccount.WriteToFile(
-                            $"Received {transfer.Amount} {transfer.CurrencyType} from account {transfer.FromAccountId}"
-                        );
+                UI.DisplayMessage($"Transfer completed: {transfer}");
 
-                        UI.DisplayMessage($"Transfer completed: {transfer}");
-                    }
-                    else
-                    {
-                        UI.DisplayMessage($"Transfer failed: Insufficient funds in account {transfer.FromAccountId}");
-                    }
-                }
-                else
-                {
-                    UI.DisplayMessage($"Transfer failed: Account not found");
-                }
+
+                // 4. Empty the list after processing all transfers
+                ListOfTransfers.Clear();
+
+                UI.DisplayMessage("=== All Transfers Processed ===\n");
             }
-
-            // 4. Empty the list after processing all transfers
-            ListOfTransfers.Clear();
-
-            UI.DisplayMessage("=== All Transfers Processed ===\n");
         }
 
         private BankAccount? CheckSenderAccountValidity(string senderAccountNumber, decimal sum)
@@ -167,7 +146,7 @@ namespace The_Invincible_Bank
                 UI.DisplayMessage("The amount of " + sum + " will be transfered to your account momentarely.\nAn interest of 7% has been applied");
                 return true;
             }
-            
+
             return false;
         }
         private bool CheckAccountBorrowValidity(decimal sum)
@@ -198,7 +177,7 @@ namespace The_Invincible_Bank
             int userLoginTries = 0;
 
             UI.DisplayMessage("1: Log in\n2: Exit program");
-            if (Input.GetNumberFromUser(1,2) == 2)
+            if (Input.GetNumberFromUser(1, 2) == 2)
             {
                 return -1;
             }
@@ -212,10 +191,10 @@ namespace The_Invincible_Bank
 
             //check if account exists in the user account list
             foreach (var user in UserAccounts)
-            {               
+            {
                 if (user.SecurityNumber == inputSecurityNumber) //If we found the security number in the list of users
-                {                   
-                    while (!user.LogIn(inputSecurityNumber,inputPassword)) //As long as the password is wrong
+                {
+                    while (!user.LogIn(inputSecurityNumber, inputPassword)) //As long as the password is wrong
                     {
                         UI.DisplayMessage("Password: "); //Replace
 
@@ -223,7 +202,7 @@ namespace The_Invincible_Bank
                         inputPassword = Console.ReadLine();
                         // ---
 
-                        if(!user.LogIn(inputSecurityNumber,inputPassword))
+                        if (!user.LogIn(inputSecurityNumber, inputPassword))
                         {
                             Console.Clear();
                             UI.DisplayMessage("Wrong Password"); //Replace
@@ -239,7 +218,7 @@ namespace The_Invincible_Bank
                     Console.WriteLine("Welcome!"); //Replace
                     userIndex = UserAccounts.IndexOf(user);
                     accountExists = true;
-                    break;                                   
+                    break;
                 }
             }
             if (!accountExists)
@@ -260,7 +239,7 @@ namespace The_Invincible_Bank
 
         public int GetAccount()
         {
-            int getAccount = Input.GetNumberFromUser(999,10000);
+            int getAccount = Input.GetNumberFromUser(999, 10000);
             return getAccount;
         }
 
