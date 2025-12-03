@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -31,6 +32,20 @@ namespace The_Invincible_Bank
                 UI.DisplayMessage($"{countFrom}: {account.Name}({account.AccountNumber}) - Balance: {account.Sum:C}");
                 countFrom++;
             }
+        }
+
+        public void TransferMoney()
+        {
+            UI.DisplayMessage("1: Which account do you want to withdraw from?");
+            //int senderAccount = Input.GetAccountNumberFromUser();
+            Console.Clear();
+            UI.DisplayMessage("2: Which account do you want to deposit to?");
+            Console.Clear();
+            //int ReceaverAccount = Input.GetAccountNumberFromUser();
+            UI.DisplayMessage("How much money do you want to send?");
+            decimal amount = Input.GetDecimalFromUser();
+
+            //Bank.Transfer(senderAccount, ReceaverAccount, amount);
         }
 
         public void ShowAccountHistory(int bankAccount)

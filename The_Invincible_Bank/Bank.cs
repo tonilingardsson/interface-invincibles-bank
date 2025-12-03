@@ -14,9 +14,9 @@ namespace The_Invincible_Bank
     {
         static public List<User> UserAccounts { get; private set; }
 
-        private int currentUserAccount = -1;
+        static private int currentUserAccount = -1;
         // Holds the all the transfers
-        private List<Transfer> ListOfTransfers = new List<Transfer>();
+        static private List<Transfer> ListOfTransfers = new List<Transfer>();
         public Bank()
         {
             var adminOne = new Admin(1111, "1111");//test
@@ -31,7 +31,7 @@ namespace The_Invincible_Bank
         {
             UserAccounts.Add(user);
         }
-        public bool Transfer(string senderAccountNumber, string receavingAccountNumber, decimal sum)
+        public static bool Transfer(string senderAccountNumber, string receavingAccountNumber, decimal sum)
         {
             BankAccount senderAccount = CheckSenderAccountValidity(senderAccountNumber, sum);
             BankAccount receiverAccount = CheckReceaverAccountValidity(receavingAccountNumber);
@@ -108,7 +108,7 @@ namespace The_Invincible_Bank
             }
         }
 
-        private BankAccount? CheckSenderAccountValidity(string senderAccountNumber, decimal sum)
+        static private BankAccount? CheckSenderAccountValidity(string senderAccountNumber, decimal sum)
         {
             if (UserAccounts[currentUserAccount] is Customer customer)
             {
@@ -123,7 +123,7 @@ namespace The_Invincible_Bank
             return null; //Retunerar null ifall kontot antingen inte finns eller inte har tillräckligt mycket pengar.
         }
 
-        private BankAccount? CheckReceaverAccountValidity(string receavingAccountNumber)
+        static private BankAccount? CheckReceaverAccountValidity(string receavingAccountNumber)
         {
             foreach (Customer customerAccount in UserAccounts) // Steps in to the list of accounts
             {
@@ -259,13 +259,13 @@ namespace The_Invincible_Bank
                 if (UserAccounts[currentUserAccount] is Customer)
                 {
                     var customer = UserAccounts[currentUserAccount] as Customer;
-                    UserInterface.CustomerMenu(customer);
+                    Menu.CustomerMenu(customer);
                     currentUserAccount = -2;
                 }
                 else if (UserAccounts[currentUserAccount] is Admin)
                 {
                     var admin = UserAccounts[currentUserAccount] as Admin;
-                    UserInterface.AdminMenu(admin);
+                    Menu.AdminMenu(admin);
                     currentUserAccount = -2;
                 }
             }

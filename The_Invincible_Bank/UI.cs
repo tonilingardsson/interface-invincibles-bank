@@ -65,5 +65,10 @@ namespace The_Invincible_Bank
             Console.Write(text);
             Console.ResetColor();
         }
+        static public void WriteContinueMessage()
+        {
+            UI.DisplayMessage("Press any key to continue...", ConsoleColor.DarkGray, ConsoleColor.DarkGray);
+            Console.ReadKey();
+        }
     }
 }
