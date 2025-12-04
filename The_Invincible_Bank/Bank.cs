@@ -225,7 +225,7 @@ namespace The_Invincible_Bank
             }
             if (!accountExists)
             {
-                UI.DisplayMessage("This account does not exist in our bank.\nTry again or exit program?\nTry again: 1 | Exit program: 2");
+                UI.DisplayMessage("This account does not exist in our bank.\nExit program or try again?\nExit program: 1 | Try again: 2");
 
                 if (Input.GetNumberFromUser(1, 2) == 2)
                 {
