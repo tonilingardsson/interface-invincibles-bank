@@ -26,9 +26,12 @@ namespace The_Invincible_Bank
                         break;
                     case 2:
                         Console.Clear();
-                        //Currency.ShowCurrencyValues()
-                        //Currency.UpdateCurrency();
-                        //Currency.ShowCurrencyValues()
+                        Currency.ShowCurrencies();
+                        UI.DisplayMessage("Updating currency values...", ConsoleColor.DarkGray, ConsoleColor.DarkGray);
+                        Thread.Sleep(2000);
+                        UI.DisplayMessage("Currencies updated!", ConsoleColor.Green, ConsoleColor.Green);
+                        Currency.UpdateCurrencyValue();
+                        Currency.ShowCurrencies();
                         UI.WriteContinueMessage();
                         break;
                     case 3:
