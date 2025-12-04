@@ -4,10 +4,10 @@
     {
         static void Main(string[] args)
         {
-            
-            //var theBank = new Bank();
-            //theBank.Run();
-            Input.GetAccountNumberFromUser();
+
+            var theBank = new Bank();
+            theBank.Run();
+
         }
     }
 }
