@@ -37,23 +37,27 @@ namespace The_Invincible_Bank
 
         static public BankAccount? GetBankAccountByNumber(string bankAccountNumber)
         {
-            foreach (Customer customerAccount in UserAccounts) // Steps in to the list of accounts
+            foreach (var account in UserAccounts) // Steps in to the list of accounts
             {
-                foreach (BankAccount bankAccount in customerAccount.Accounts) //Steps in to the list of accounts the user own
+                if (account is Customer)
                 {
-                    if (bankAccount.AccountNumber == bankAccountNumber)
+                    var customer = (Customer)account;
+                    foreach (BankAccount bankAccount in customer.Accounts) //Steps in to the list of accounts the user own
                     {
-                        return bankAccount;
+                        if (bankAccount.AccountNumber == bankAccountNumber)
+                        {
+                            return bankAccount;
+                        }
                     }
                 }
             }
             return null; //Returns null if the account does not exist
         }
 
-        public static bool Transfer(string senderAccountNumber, string receavingAccountNumber, decimal sum)
+        public static bool Transfer(BankAccount senderAccount, BankAccount receiverAccount, decimal sum)
         {
-            BankAccount senderAccount = GetBankAccountByNumber(senderAccountNumber);
-            BankAccount receiverAccount = GetBankAccountByNumber(receavingAccountNumber);
+            //BankAccount senderAccount = GetBankAccountByNumber(senderAccountNumber);
+            //BankAccount receiverAccount = GetBankAccountByNumber(receavingAccountNumber);
 
             if (senderAccount != null && receiverAccount != null && CheckFounds(senderAccount, sum) && CheckIfOwnerOfThisAccount(senderAccount))
             {
@@ -70,9 +74,10 @@ namespace The_Invincible_Bank
 
                 //Add it to the list of transfers
                 ListOfTransfers.Add(newTransfer);
+                UI.DisplayMessage("A sum of " + sum + " " + senderAccount.CurrencyType + " has been tranfered from account: " + senderAccount.AccountNumber + " to account: " + receiverAccount.AccountNumber, ConsoleColor.Green, ConsoleColor.Green);
                 return true;
             }
-            UI.DisplayMessage("Transfer failed: Invalid sender or receiver account.");
+            UI.DisplayMessage("Transfer failed: Invalid sender or receiver account.", ConsoleColor.Red, ConsoleColor.Red);
             return false;
 
         }
@@ -118,7 +123,7 @@ namespace The_Invincible_Bank
             return false; //Returns false if the account does not have enough money on it
         }
 
-        static private bool CheckIfOwnerOfThisAccount(BankAccount senderAccount)
+        static public bool CheckIfOwnerOfThisAccount(BankAccount senderAccount)
         {
             var customer = UserAccounts[currentUserAccount] as Customer;
 
@@ -132,23 +137,22 @@ namespace The_Invincible_Bank
             return false; //Returns false if the account is not owned by the sender.
         }
 
-        public bool Borrow(string bankAccount, decimal sum)
+        public static bool Borrow(BankAccount bankAccount, decimal sum)
         {
             if (CheckAccountBorrowValidity(sum))
             {
                 //Add to transfer list
-                BankAccount account = GetBankAccountByNumber(bankAccount);
-                if (account != null)
+                if (bankAccount != null)
                 {
-                    account.Deposit(sum);
+                    bankAccount.Deposit(sum);
                 }
-                UI.DisplayMessage("The amount of " + sum + " will be transfered to your account momentarely.\nAn interest of 7% has been applied");
+                UI.DisplayMessage("An interest rate of 7% has been applied to your loan", ConsoleColor.DarkYellow, ConsoleColor.DarkYellow);
                 return true;
             }
 
             return false;
         }
-        private bool CheckAccountBorrowValidity(decimal sum)
+        private static bool CheckAccountBorrowValidity(decimal sum)
         {
             decimal totalWorth = 0;
 
@@ -185,7 +189,7 @@ namespace The_Invincible_Bank
             UI.DisplayMessage("Security number: ");
             while (!int.TryParse(Console.ReadLine(), out inputSecurityNumber) && inputSecurityNumber.ToString().Length != 4)
             {
-                UI.DisplayMessage("This is not a valid security number, please try again");
+                UI.DisplayMessage("This is not a valid security number, please try again", ConsoleColor.Red, ConsoleColor.Red);
             }
 
             //check if account exists in the user account list
@@ -209,12 +213,11 @@ namespace The_Invincible_Bank
                             userLoginTries++;
                             if (userLoginTries == 3)
                             {
-                                UI.DisplayMessage("You have failed to enter the right credentials too many times.\nClosing system....");
+                                UI.DisplayMessage("You have failed to enter the right credentials too many times.\nClosing system....", ConsoleColor.Red, ConsoleColor.Red);
                                 return -1;
                             }
                         }
                     }
-                    Console.WriteLine("Welcome!"); //Replace
                     userIndex = UserAccounts.IndexOf(user);
                     accountExists = true;
                     break;

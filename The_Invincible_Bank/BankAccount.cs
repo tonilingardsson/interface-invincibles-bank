@@ -22,7 +22,7 @@ namespace The_Invincible_Bank
         public BankAccount(string name, string currencyType, string accountNumber)
         {
             Name = name;
-            Sum = 0m;
+            Sum = 10m;
             CurrencyType = currencyType;
             AccountNumber = accountNumber;
             //Create filename based on account number
@@ -52,7 +52,7 @@ namespace The_Invincible_Bank
             {
                 Sum += amount;
                 WriteToFile($"Deposited {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
-                UI.DisplayMessage($"Deposited {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
+                //UI.DisplayMessage($"Deposited {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
             }
         }
         public void Withdraw(decimal amount)
@@ -61,11 +61,11 @@ namespace The_Invincible_Bank
             {
                 Sum -= amount;
                 WriteToFile($"Withdrew {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
-                UI.DisplayMessage($"Withdrew {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
+                //UI.DisplayMessage($"Withdrew {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
             }
             else
             {
-                UI.DisplayMessage("Insufficient funds or invalid amount!");
+                //UI.DisplayMessage("Insufficient funds or invalid amount!");
             }
         }
 

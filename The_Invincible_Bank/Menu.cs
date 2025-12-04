@@ -65,23 +65,25 @@ namespace The_Invincible_Bank
                         break;
                     case 3:
                         Console.Clear();
+                        customer.ShowAccounts();
                         customer.TransferMoney();
                         UI.WriteContinueMessage();
                         break;
                     case 4:
                         Console.Clear();
-                        //customer.ConvertAccountCurrency(Input.getBankAccount(), Input.getCurrency())
+                        //customer.ConvertAccountCurrency(Input.GetNumberFromUser, Input.GetCurrency())
                         UI.WriteContinueMessage();
                         break;
                     case 5:
                         Console.Clear();
                         customer.ShowAccounts();
-                        //customer.ShowAccountHistory(Input.GetBankAccountFromUser());
+                        customer.ShowAccountHistory(Input.GetAccountNumberFromUser());
                         UI.WriteContinueMessage();
                         break;
                     case 6:
                         Console.Clear();
-                        //Borrow(Input.getBankAccount(), Input.GetDecimalFromUser());
+                        //Borrow(Input.GetAccountNumberFromUser(), Input.GetDecimalFromUser());
+                        customer.BorrowMoney();
                         UI.WriteContinueMessage();
                         break;
                     case 7:
