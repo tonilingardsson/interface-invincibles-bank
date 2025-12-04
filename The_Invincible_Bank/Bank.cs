@@ -21,10 +21,13 @@ namespace The_Invincible_Bank
         {
             var adminOne = new Admin(1111, "1111");//test
             var customerOne = new Customer(2222, "2222");
+            var customertwo = new Customer(3333, "3333");
+            //customertwo.CreateBankAccount("Vacation savings", "Sek"); //Funktion finns inte ännu
             UserAccounts = new List<User>();
 
             UserAccounts.Add(adminOne);
             UserAccounts.Add(customerOne);
+            UserAccounts.Add(customertwo);
         }
 
         public void AddUserToList(User user)
@@ -129,11 +132,16 @@ namespace The_Invincible_Bank
             return false; //Returns false if the account is not owned by the sender.
         }
 
-        public bool Borrow(int bankAccount, decimal sum)
+        public bool Borrow(string bankAccount, decimal sum)
         {
             if (CheckAccountBorrowValidity(sum))
             {
                 //Add to transfer list
+                BankAccount account = GetBankAccountByNumber(bankAccount);
+                if (account != null)
+                {
+                    account.Deposit(sum);
+                }
                 UI.DisplayMessage("The amount of " + sum + " will be transfered to your account momentarely.\nAn interest of 7% has been applied");
                 return true;
             }

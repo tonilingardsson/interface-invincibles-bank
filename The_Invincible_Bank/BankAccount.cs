@@ -9,7 +9,7 @@ namespace The_Invincible_Bank
     public class BankAccount
     {
         public string Name { get; private set; } = string.Empty;
-        public decimal Sum { get; private set; } = 0;
+        public decimal Sum { get; private set; } = 10;
         public string CurrencyType { get; private set; }
         public string AccountNumber { get; private set; }
 
