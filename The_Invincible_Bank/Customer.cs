@@ -83,8 +83,16 @@ namespace The_Invincible_Bank
         }
         public void ShowAccountHistory(string bankAccount)
         {
-            UI.DisplayMessage("Transaction history for account:");
-            UI.DisplayFile(Bank.GetBankAccountByNumber(bankAccount).FilePath);
+            BankAccount account = Bank.GetBankAccountByNumber(bankAccount);
+            if (account == null)
+            {
+                UI.DisplayMessage("This account does not exsist", ConsoleColor.Red, ConsoleColor.Red);
+            }
+            else
+            {
+                UI.DisplayMessage("Transaction history for account:");
+                UI.DisplayFile(Bank.GetBankAccountByNumber(bankAccount).FilePath);
+            }
         }
 
         public void ConvertAccountCurrency(int bankAccount, string currencyToConvertTo)
