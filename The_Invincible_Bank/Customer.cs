@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Net.Http.Headers;
@@ -18,7 +19,16 @@ namespace The_Invincible_Bank
         public Customer(int securityNumber, string password)
             : base(securityNumber, password)
         {
-            accountOne = new BankAccount("Bank Account", "Sek", "1234");
+            int number;
+            string newSecurityNumber = string.Empty;
+
+            for (int i = 0; i < 4; i++)
+            {
+                number = new Random().Next(0, 10);
+                newSecurityNumber += number;
+            }
+            
+            accountOne = new BankAccount("Bank Account", "SEK", newSecurityNumber);
             Accounts = new List<BankAccount> { accountOne };
         }
 
@@ -33,10 +43,48 @@ namespace The_Invincible_Bank
             }
         }
 
-        public void ShowAccountHistory(int bankAccount)
+        public void TransferMoney()
         {
-            //Visa kontots överföringshistorik. Vi kan använda oss av en textfil här
-            //Använd dig av UI filen
+            UI.DisplayMessage("1: Which account do you want to withdraw from?");
+            BankAccount senderAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
+            Console.Clear();
+            UI.DisplayMessage("2: Which account do you want to deposit to?");
+            BankAccount ReceaverAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
+            Console.Clear();
+            UI.DisplayMessage("How much money do you want to send?");
+            decimal amount = Input.GetDecimalFromUser();
+            Console.Clear();
+            Bank.Transfer(senderAccount, ReceaverAccount, amount);
+        }
+
+        public void BorrowMoney()
+        {
+            ShowAccounts();
+            UI.DisplayMessage("1 Which account do you want the money to be deposited to?");
+            BankAccount account = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
+            if (account == null || !Bank.CheckIfOwnerOfThisAccount(account))
+            {
+                UI.DisplayMessage("The account you entered isn't owned by you or doesnt exist in our system", ConsoleColor.Red, ConsoleColor.Red);
+            }
+            else 
+            {
+                Console.Clear();
+                UI.DisplayMessage("2: How much money do you want to borrow?");
+                decimal amount = Input.GetDecimalFromUser();
+                if (!Bank.Borrow(account, amount))
+                {
+                    UI.DisplayMessage("Transfer was not succesfull\nYour account did not qualify for borrowing this amount of money", ConsoleColor.Red, ConsoleColor.Red);
+                }
+                else
+                {
+                    UI.DisplayMessage("The amount of " + amount + " " + account.CurrencyType + " was transfered to your account.", ConsoleColor.Green, ConsoleColor.Green);
+                }
+            }
+        }
+        public void ShowAccountHistory(string bankAccount)
+        {
+            UI.DisplayMessage("Transaction history for account:");
+            UI.DisplayFile(Bank.GetBankAccountByNumber(bankAccount).FilePath);
         }
 
         public void ConvertAccountCurrency(int bankAccount, string currencyToConvertTo)

@@ -10,10 +10,10 @@ namespace The_Invincible_Bank
     {
         private static Dictionary<string, decimal> CurrencyList = new Dictionary<string, decimal>
         {
-            { "Sek", 1m },
-            { "Dollar", 9.45m },
-            { "Euro", 10.96m },
-            { "Pound", 12.44m }
+            { "SEK", 1m },
+            { "USD", 9.45m },
+            { "EUR", 10.96m },
+            { "GBP", 12.44m }
         };
 
         // Metod för att konvertera en summa från en valuta till en annan
@@ -36,7 +36,7 @@ namespace The_Invincible_Bank
             Random rnd = new Random();
 
             // Loopar igenom alla valutor utom SEK (som alltid är 1)
-            foreach (var currency in new List<string> { "Sek", "Dollar", "Euro", "Pound"})
+            foreach (var currency in new List<string> { "SEK", "USD", "EUR", "GBP" })
             {
                 decimal currentValue = CurrencyList[currency];
 
@@ -51,12 +51,13 @@ namespace The_Invincible_Bank
         // Hjälpmetod för att skriva ut aktuella valutakurser
         public static void ShowCurrencies()
         {
-            Console.WriteLine("Aktuella valutakurser (relativt SEK):");
+            string allRates = "Current exchange rates (relative to SEK)\n\n";
             foreach (var kvp in CurrencyList)
             {
-                Console.WriteLine($"{kvp.Key}: {kvp.Value}");
+                allRates += $"{kvp.Key}: {kvp.Value}\n";
             }
-            Console.WriteLine();
+            UI.DisplayMessage(allRates);
         }
     }
 }
+

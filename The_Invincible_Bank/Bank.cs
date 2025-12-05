@@ -14,29 +14,52 @@ namespace The_Invincible_Bank
     {
         static public List<User> UserAccounts { get; private set; }
 
-        private int currentUserAccount = -1;
+        static private int currentUserAccount = -1;
         // Holds the all the transfers
-        private List<Transfer> ListOfTransfers = new List<Transfer>();
+        static private List<Transfer> ListOfTransfers = new List<Transfer>();
         public Bank()
         {
             var adminOne = new Admin(1111, "1111");//test
             var customerOne = new Customer(2222, "2222");
+            var customertwo = new Customer(3333, "3333");
+            //customertwo.CreateBankAccount("Vacation savings", "Sek"); //Funktion finns inte ännu
             UserAccounts = new List<User>();
 
             UserAccounts.Add(adminOne);
             UserAccounts.Add(customerOne);
+            UserAccounts.Add(customertwo);
         }
 
         public void AddUserToList(User user)
         {
             UserAccounts.Add(user);
         }
-        public bool Transfer(string senderAccountNumber, string receavingAccountNumber, decimal sum)
-        {
-            BankAccount senderAccount = CheckSenderAccountValidity(senderAccountNumber, sum);
-            BankAccount receiverAccount = CheckReceaverAccountValidity(receavingAccountNumber);
 
-            if (senderAccount != null && receiverAccount != null)
+        static public BankAccount? GetBankAccountByNumber(string bankAccountNumber)
+        {
+            foreach (var account in UserAccounts) // Steps in to the list of accounts
+            {
+                if (account is Customer)
+                {
+                    var customer = (Customer)account;
+                    foreach (BankAccount bankAccount in customer.Accounts) //Steps in to the list of accounts the user own
+                    {
+                        if (bankAccount.AccountNumber == bankAccountNumber)
+                        {
+                            return bankAccount;
+                        }
+                    }
+                }
+            }
+            return null; //Returns null if the account does not exist
+        }
+
+        public static bool Transfer(BankAccount senderAccount, BankAccount receiverAccount, decimal sum)
+        {
+            //BankAccount senderAccount = GetBankAccountByNumber(senderAccountNumber);
+            //BankAccount receiverAccount = GetBankAccountByNumber(receavingAccountNumber);
+
+            if (senderAccount != null && receiverAccount != null && CheckFounds(senderAccount, sum) && CheckIfOwnerOfThisAccount(senderAccount))
             {
                 //  Get currency types from both accounts
                 string fromCurrency = senderAccount.CurrencyType.ToString();
@@ -44,39 +67,20 @@ namespace The_Invincible_Bank
 
                 //  Create a transfer object
                 Transfer newTransfer = new Transfer(
-                    senderAccountNumber,
-                    receavingAccountNumber,
-                    sum,
-                    fromCurrency,
-                    toCurrency
+                    senderAccount,
+                    receiverAccount,
+                    sum
                 );
 
                 //Add it to the list of transfers
                 ListOfTransfers.Add(newTransfer);
+                UI.DisplayMessage("A sum of " + sum + " " + senderAccount.CurrencyType + " has been tranfered from account: " + senderAccount.AccountNumber + " to account: " + receiverAccount.AccountNumber, ConsoleColor.Green, ConsoleColor.Green);
                 return true;
             }
-            UI.DisplayMessage("Transfer failed: Invalid sender or receiver account.");
+            UI.DisplayMessage("Transfer failed: Invalid sender or receiver account.", ConsoleColor.Red, ConsoleColor.Red);
             return false;
 
         }
-        private BankAccount FindBankAccountByNumber(string accountNumber)
-        {
-            foreach (User user in UserAccounts)
-            {
-                if (user is Customer customer)
-                {
-                    foreach (BankAccount account in customer.Accounts)
-                    {
-                        if (account.AccountNumber == accountNumber)
-                        {
-                            return account;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
         public void ProcessTransfers()
         {
             UI.DisplayMessage("\n=== Processing All Transfers ===");
@@ -84,93 +88,71 @@ namespace The_Invincible_Bank
             // Loop through each transfer in the list
             foreach (Transfer transfer in ListOfTransfers)
             {
-                // Find the sender account
-                BankAccount senderAccount = FindBankAccountByNumber(transfer.FromAccountId);
 
-                // Find the receiver account
-                BankAccount receiverAccount = FindBankAccountByNumber(transfer.ToAccountId);
+                // 1. Withdraw from sender
+                transfer.FromAccount.Withdraw(transfer.Amount);
 
-                if (senderAccount != null && receiverAccount != null)
-                {
-                    // Check if sender has enough money
-                    if (senderAccount.Sum >= transfer.Amount)
-                    {
-                        // 1. Withdraw from sender
-                        senderAccount.Withdraw(transfer.Amount);
+                // 2. Deposit to receiver
+                transfer.ToAccount.Deposit(transfer.Amount);
 
-                        // 2. Deposit to receiver
-                        receiverAccount.Deposit(transfer.Amount);
+                // 3. Write transaction history to BOTH account files
+                transfer.FromAccount.WriteToFile(
+                    $"Transferred {transfer.Amount} {transfer.CurrencyType} to account {transfer.FromAccount.AccountNumber}"
+                );
 
-                        // 3. Write transaction history to BOTH account files
-                        senderAccount.WriteToFile(
-                            $"Transferred {transfer.Amount} {transfer.CurrencyType} to account {transfer.ToAccountId}"
-                        );
+                transfer.ToAccount.WriteToFile(
+                    $"Received {transfer.Amount} {transfer.CurrencyType} from account {transfer.ToAccount.AccountNumber}"
+                );
 
-                        receiverAccount.WriteToFile(
-                            $"Received {transfer.Amount} {transfer.CurrencyType} from account {transfer.FromAccountId}"
-                        );
+                UI.DisplayMessage($"Transfer completed: {transfer}");
 
-                        UI.DisplayMessage($"Transfer completed: {transfer}");
-                    }
-                    else
-                    {
-                        UI.DisplayMessage($"Transfer failed: Insufficient funds in account {transfer.FromAccountId}");
-                    }
-                }
-                else
-                {
-                    UI.DisplayMessage($"Transfer failed: Account not found");
-                }
+
+                // 4. Empty the list after processing all transfers
+                ListOfTransfers.Clear();
+
+                UI.DisplayMessage("=== All Transfers Processed ===\n");
             }
-
-            // 4. Empty the list after processing all transfers
-            ListOfTransfers.Clear();
-
-            UI.DisplayMessage("=== All Transfers Processed ===\n");
         }
 
-        private BankAccount? CheckSenderAccountValidity(string senderAccountNumber, decimal sum)
+        static private bool CheckFounds(BankAccount senderAccount, decimal sum)
         {
-            if (UserAccounts[currentUserAccount] is Customer customer)
+            if (senderAccount.Sum >= sum)
             {
-                foreach (var account in customer.Accounts) //Gets the worth of all the accounts of the current user
-                {
-                    if (account.AccountNumber == senderAccountNumber && account.Sum >= sum)
-                    {
-                        return account;
-                    }
-                }
+                return true;
             }
-            return null; //Retunerar null ifall kontot antingen inte finns eller inte har tillräckligt mycket pengar.
+            return false; //Returns false if the account does not have enough money on it
         }
 
-        private BankAccount? CheckReceaverAccountValidity(string receavingAccountNumber)
+        static public bool CheckIfOwnerOfThisAccount(BankAccount senderAccount)
         {
-            foreach (Customer customerAccount in UserAccounts) // Steps in to the list of accounts
+            var customer = UserAccounts[currentUserAccount] as Customer;
+
+            foreach (BankAccount account in customer.Accounts) // Steps in to the list of accounts
             {
-                foreach (BankAccount bankAccount in customerAccount.Accounts) //Steps in to the list of accounts the user own
+                if (senderAccount == account)
                 {
-                    if (bankAccount.AccountNumber == receavingAccountNumber)
-                    {
-                        return bankAccount;
-                    }
+                    return true;
                 }
             }
-            return null; //Retunrar null om kontot inte finns.
+            return false; //Returns false if the account is not owned by the sender.
         }
 
-        public bool Borrow(int bankAccount, decimal sum)
+        public static bool Borrow(BankAccount bankAccount, decimal sum)
         {
             if (CheckAccountBorrowValidity(sum))
             {
                 //Add to transfer list
-                UI.DisplayMessage("The amount of " + sum + " will be transfered to your account momentarely.\nAn interest of 7% has been applied");
+                if (bankAccount != null)
+                {
+                    bankAccount.Deposit(sum);
+                }
+                UI.DisplayMessage("An interest rate of 7% has been applied to your loan", ConsoleColor.DarkYellow, ConsoleColor.DarkYellow);
                 return true;
             }
-            
+
             return false;
         }
-        private bool CheckAccountBorrowValidity(decimal sum)
+        private static bool CheckAccountBorrowValidity(decimal sum)
         {
             decimal totalWorth = 0;
 
@@ -198,7 +180,7 @@ namespace The_Invincible_Bank
             int userLoginTries = 0;
 
             UI.DisplayMessage("1: Log in\n2: Exit program");
-            if (Input.GetNumberFromUser(1,2) == 2)
+            if (Input.GetNumberFromUser(1, 2) == 2)
             {
                 return -1;
             }
@@ -207,15 +189,15 @@ namespace The_Invincible_Bank
             UI.DisplayMessage("Security number: ");
             while (!int.TryParse(Console.ReadLine(), out inputSecurityNumber) && inputSecurityNumber.ToString().Length != 4)
             {
-                UI.DisplayMessage("This is not a valid security number, please try again");
+                UI.DisplayMessage("This is not a valid security number, please try again", ConsoleColor.Red, ConsoleColor.Red);
             }
 
             //check if account exists in the user account list
             foreach (var user in UserAccounts)
-            {               
+            {
                 if (user.SecurityNumber == inputSecurityNumber) //If we found the security number in the list of users
-                {                   
-                    while (!user.LogIn(inputSecurityNumber,inputPassword)) //As long as the password is wrong
+                {
+                    while (!user.LogIn(inputSecurityNumber, inputPassword)) //As long as the password is wrong
                     {
                         UI.DisplayMessage("Password: "); //Replace
 
@@ -223,7 +205,7 @@ namespace The_Invincible_Bank
                         inputPassword = Console.ReadLine();
                         // ---
 
-                        if(!user.LogIn(inputSecurityNumber,inputPassword))
+                        if (!user.LogIn(inputSecurityNumber, inputPassword))
                         {
                             Console.Clear();
                             UI.DisplayMessage("Wrong Password"); //Replace
@@ -231,20 +213,19 @@ namespace The_Invincible_Bank
                             userLoginTries++;
                             if (userLoginTries == 3)
                             {
-                                UI.DisplayMessage("You have failed to enter the right credentials too many times.\nClosing system....");
+                                UI.DisplayMessage("You have failed to enter the right credentials too many times.\nClosing system....", ConsoleColor.Red, ConsoleColor.Red);
                                 return -1;
                             }
                         }
                     }
-                    Console.WriteLine("Welcome!"); //Replace
                     userIndex = UserAccounts.IndexOf(user);
                     accountExists = true;
-                    break;                                   
+                    break;
                 }
             }
             if (!accountExists)
             {
-                UI.DisplayMessage("This account does not exist in our bank.\nTry again or exit program?\nTry again: 1 | Exit program: 2");
+                UI.DisplayMessage("This account does not exist in our bank.\nExit program or try again?\nExit program: 1 | Try again: 2");
 
                 if (Input.GetNumberFromUser(1, 2) == 2)
                 {
@@ -260,7 +241,7 @@ namespace The_Invincible_Bank
 
         public int GetAccount()
         {
-            int getAccount = Input.GetNumberFromUser(999,10000);
+            int getAccount = Input.GetNumberFromUser(999, 10000);
             return getAccount;
         }
 
@@ -280,13 +261,13 @@ namespace The_Invincible_Bank
                 if (UserAccounts[currentUserAccount] is Customer)
                 {
                     var customer = UserAccounts[currentUserAccount] as Customer;
-                    UserInterface.CustomerMenu(customer);
+                    Menu.CustomerMenu(customer);
                     currentUserAccount = -2;
                 }
                 else if (UserAccounts[currentUserAccount] is Admin)
                 {
                     var admin = UserAccounts[currentUserAccount] as Admin;
-                    UserInterface.AdminMenu(admin);
+                    Menu.AdminMenu(admin);
                     currentUserAccount = -2;
                 }
             }

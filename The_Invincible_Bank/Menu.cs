@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace The_Invincible_Bank
 {
-    static class UserInterface
+    static class Menu
     {
         public static void AdminMenu(Admin admin)
         {
@@ -22,12 +22,17 @@ namespace The_Invincible_Bank
                     case 1:
                         Console.Clear();
                         admin.CreateNewUser();
+                        UI.WriteContinueMessage();
                         break;
                     case 2:
                         Console.Clear();
-                        //Currency.ShowCurrencyValues()
-                        //Currency.UpdateCurrency();
-                        //Currency.ShowCurrencyValues()
+                        Currency.ShowCurrencies();
+                        UI.DisplayMessage("Updating currency values...", ConsoleColor.DarkGray, ConsoleColor.DarkGray);
+                        Thread.Sleep(2000);
+                        UI.DisplayMessage("Currencies updated!", ConsoleColor.Green, ConsoleColor.Green);
+                        Currency.UpdateCurrencyValue();
+                        Currency.ShowCurrencies();
+                        UI.WriteContinueMessage();
                         break;
                     case 3:
                         Console.Clear();
@@ -51,28 +56,35 @@ namespace The_Invincible_Bank
                     case 1:
                         Console.Clear();
                         customer.ShowAccounts();
-
+                        UI.WriteContinueMessage();
                         break;
                     case 2:
                         Console.Clear();
                         //customer.CreateBankAccount(Input.GetString(), Input.GetCurrency());
+                        UI.WriteContinueMessage();
                         break;
                     case 3:
                         Console.Clear();
-                        //customer.Transfer();
+                        customer.ShowAccounts();
+                        customer.TransferMoney();
+                        UI.WriteContinueMessage();
                         break;
                     case 4:
                         Console.Clear();
-                        //customer.ConvertAccountCurrency(Input.getBankAccount(), Input.getCurrency())
+                        //customer.ConvertAccountCurrency(Input.GetNumberFromUser, Input.GetCurrency())
+                        UI.WriteContinueMessage();
                         break;
                     case 5:
                         Console.Clear();
                         customer.ShowAccounts();
-                        //customer.ShowAccountHistory(Input.getBankAccount());
+                        customer.ShowAccountHistory(Input.GetAccountNumberFromUser());
+                        UI.WriteContinueMessage();
                         break;
                     case 6:
                         Console.Clear();
-                        //Borrow(Input.getBankAccount(), Input.GetDecimalFromUser());
+                        //Borrow(Input.GetAccountNumberFromUser(), Input.GetDecimalFromUser());
+                        customer.BorrowMoney();
+                        UI.WriteContinueMessage();
                         break;
                     case 7:
                         Console.Clear();

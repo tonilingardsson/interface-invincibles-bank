@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace The_Invincible_Bank
 {
-    internal class BankAccount
+    public class BankAccount
     {
         public string Name { get; private set; } = string.Empty;
-        public decimal Sum { get; private set; } = 0;
+        public decimal Sum { get; private set; } = 10;
         public string CurrencyType { get; private set; }
         public string AccountNumber { get; private set; }
 
-        private string filePath;
+        public string FilePath { get; private set; }
 
         public BankAccount()
         {
@@ -22,20 +22,20 @@ namespace The_Invincible_Bank
         public BankAccount(string name, string currencyType, string accountNumber)
         {
             Name = name;
-            Sum = 0m;
+            Sum = 10m;
             CurrencyType = currencyType;
             AccountNumber = accountNumber;
             //Create filename based on account number
             string fileName = $"account_{accountNumber}.txt";
 
             string projectPath = Directory.GetCurrentDirectory();
-            filePath = Path.Combine(projectPath, fileName);
+            FilePath = Path.Combine(projectPath, fileName);
 
             CreateAccountFile();
         }
         private void CreateAccountFile()
         {
-            using (StreamWriter sw = File.CreateText(filePath))
+            using (StreamWriter sw = File.CreateText(FilePath))
             {
                 sw.WriteLine($"Account Number: {AccountNumber}");
                 sw.WriteLine($"Account Name: {Name}");
@@ -51,7 +51,8 @@ namespace The_Invincible_Bank
             if (amount > 0)
             {
                 Sum += amount;
-                UI.DisplayMessage($"Deposited {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
+                WriteToFile($"Deposited {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
+                //UI.DisplayMessage($"Deposited {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
             }
         }
         public void Withdraw(decimal amount)
@@ -59,17 +60,18 @@ namespace The_Invincible_Bank
             if (amount > 0 && amount <= Sum)
             {
                 Sum -= amount;
-                UI.DisplayMessage($"Withdrew {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
+                WriteToFile($"Withdrew {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
+                //UI.DisplayMessage($"Withdrew {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
             }
             else
             {
-                UI.DisplayMessage("Insufficient funds or invalid amount!");
+                //UI.DisplayMessage("Insufficient funds or invalid amount!");
             }
         }
 
         public void WriteToFile(string transactionInfo)
         {
-            using (StreamWriter sw = File.AppendText(filePath))
+            using (StreamWriter sw = File.AppendText(FilePath))
             {
                 sw.WriteLine($"{DateTime.Now}: {transactionInfo}");
             }
