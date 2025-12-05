@@ -23,8 +23,9 @@ namespace The_Invincible_Bank
         }
         static public void DisplayMessage(string message, ConsoleColor frameColor = ConsoleColor.White, ConsoleColor textcolor = ConsoleColor.White)
         {
+            message = message.Replace("\r", "");
             string[] lines = message.Split('\n'); //Creates an array with strings
-
+            
             //Finds the longest string in the array
             int maxStringLegnth = 0;
             foreach (string line in lines)
