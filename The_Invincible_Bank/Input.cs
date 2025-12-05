@@ -62,5 +62,49 @@ namespace The_Invincible_Bank
 
             return account;
         }
+
+        public static string GetString()
+        {
+            string accountName = null;
+            while (accountName == null)
+            {
+                UI.DisplayMessage("Give this account a name: ");
+                accountName = Console.ReadLine().Trim();
+
+                if(accountName == null)
+                {
+                    UI.DisplayMessage("You must give it a name! It can't be empty or use space/s.");
+                }
+                else
+                {
+                    return accountName;
+                }
+            }
+            return String.Empty;
+        }
+
+        public static string GetCurrency()
+        {
+            UI.DisplayMessage("Select currency:\n1: SEK\n2: USD\n3: EUR\n4: GBP");
+            int choice = GetNumberFromUser(1,4);
+
+            switch (choice)
+            {
+                case 1:
+                return "Sek";
+                
+                case 2:
+                return "Dollar";
+                
+                case 3:
+                return "Euro";
+                
+                case 4:
+                return "Pound";
+            
+                default:
+                return "Sek";
+            }
+        }
     }
 }

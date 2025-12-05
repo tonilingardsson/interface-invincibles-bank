@@ -83,16 +83,16 @@ namespace The_Invincible_Bank
         }
         public void ShowAccountHistory(string bankAccount)
         {
-            BankAccount account = Bank.GetBankAccountByNumber(bankAccount);
+BankAccount account = Bank.GetBankAccountByNumber(bankAccount);
             if (account == null)
             {
                 UI.DisplayMessage("This account does not exsist", ConsoleColor.Red, ConsoleColor.Red);
             }
             else
             {
-                UI.DisplayMessage("Transaction history for account:");
-                UI.DisplayFile(Bank.GetBankAccountByNumber(bankAccount).FilePath);
-            }
+            UI.DisplayMessage("Transaction history for account:");
+            UI.DisplayFile(Bank.GetBankAccountByNumber(bankAccount).FilePath);
+        }
         }
 
         public void ConvertAccountCurrency(int bankAccount, string currencyToConvertTo)
@@ -105,6 +105,14 @@ namespace The_Invincible_Bank
         public void CreateBankAccount(string accountName, string currencyType)
         {
             //Creates and adds a new account to the account list. 
+            {
+                Random? rnd = new Random();
+                string accountNumber = rnd.Next(0, 9999).ToString("D4");
+                
+                BankAccount newAccount = new BankAccount(accountName, currencyType, accountNumber);
+                // Add it to the customer's account list
+                Accounts.Add(newAccount);
+            }
             //Make sure to generate a bank account number that does not already EXSIST IN THE LIST!
             //Användaren ska även få en ränta på sitt nya konto. 1%
         }

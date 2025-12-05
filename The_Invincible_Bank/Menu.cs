@@ -60,7 +60,7 @@ namespace The_Invincible_Bank
                         break;
                     case 2:
                         Console.Clear();
-                        //customer.CreateBankAccount(Input.GetString(), Input.GetCurrency());
+                        customer.CreateBankAccount(Input.GetString(), Input.GetCurrency());
                         UI.WriteContinueMessage();
                         break;
                     case 3:
