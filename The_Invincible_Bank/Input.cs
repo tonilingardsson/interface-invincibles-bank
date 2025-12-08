@@ -91,19 +91,19 @@ namespace The_Invincible_Bank
             switch (choice)
             {
                 case 1:
-                return "Sek";
+                return "SEK";
                 
                 case 2:
-                return "Dollar";
+                return "USD";
                 
                 case 3:
-                return "Euro";
+                return "EUR";
                 
                 case 4:
-                return "Pound";
+                return "GBP";
             
                 default:
-                return "Sek";
+                return "SEK";
             }
         }
     }

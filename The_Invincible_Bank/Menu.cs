@@ -61,17 +61,18 @@ namespace The_Invincible_Bank
                     case 2:
                         Console.Clear();
                         customer.CreateBankAccount(Input.GetString(), Input.GetCurrency());
+                        UI.DisplayMessage("Account was created!", ConsoleColor.Green, ConsoleColor.Green);
                         UI.WriteContinueMessage();
                         break;
                     case 3:
                         Console.Clear();
-                        customer.ShowAccounts();
                         customer.TransferMoney();
                         UI.WriteContinueMessage();
                         break;
                     case 4:
                         Console.Clear();
                         //customer.ConvertAccountCurrency(Input.GetNumberFromUser, Input.GetCurrency())
+                        UI.DisplayMessage("This function isn't available at this moment.");
                         UI.WriteContinueMessage();
                         break;
                     case 5:
@@ -82,7 +83,6 @@ namespace The_Invincible_Bank
                         break;
                     case 6:
                         Console.Clear();
-                        //Borrow(Input.GetAccountNumberFromUser(), Input.GetDecimalFromUser());
                         customer.BorrowMoney();
                         UI.WriteContinueMessage();
                         break;
