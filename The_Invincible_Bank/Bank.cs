@@ -22,7 +22,7 @@ namespace The_Invincible_Bank
             var adminOne = new Admin(1111, "1111");//test
             var customerOne = new Customer(2222, "2222");
             var customertwo = new Customer(3333, "3333");
-            //customertwo.CreateBankAccount("Vacation savings", "Sek"); //Funktion finns inte ännu
+            customertwo.CreateBankAccount("Vacation savings", "SEK"); //Funktion finns inte ännu
             UserAccounts = new List<User>();
 
             UserAccounts.Add(adminOne);

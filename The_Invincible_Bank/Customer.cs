@@ -38,7 +38,7 @@ namespace The_Invincible_Bank
             int countFrom = 1;
             foreach (var account in Accounts)
             {
-                UI.DisplayMessage($"{countFrom}: {account.Name}({account.AccountNumber}) - Balance: {account.Sum:C}");
+                UI.DisplayMessage($"{countFrom}: {account.Name}({account.AccountNumber}) - Balance: {Math.Round(account.Sum, 2)} " + account.CurrencyType);
                 countFrom++;
             }
         }
@@ -46,12 +46,16 @@ namespace The_Invincible_Bank
         public void TransferMoney()
         {
             UI.DisplayMessage("1: Which account do you want to withdraw from?");
+            ShowAccounts();
             BankAccount senderAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
             Console.Clear();
-            UI.DisplayMessage("2: Which account do you want to deposit to?");
+            UI.DisplayMessage("2: Which account do you want to deposit to?\n" +
+                "You can also transfer to other customer accounts." );
+            ShowAccounts();
             BankAccount ReceaverAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
             Console.Clear();
-            UI.DisplayMessage("How much money do you want to send?");
+            UI.DisplayMessage("3: In the currency of the withdrawal account: " + senderAccount.CurrencyType + ", how much money do you want to transfer?\n" +
+                " Current founds: " + Math.Round(senderAccount.Sum, 2));
             decimal amount = Input.GetDecimalFromUser();
             Console.Clear();
             Bank.Transfer(senderAccount, ReceaverAccount, amount);
@@ -83,10 +87,10 @@ namespace The_Invincible_Bank
         }
         public void ShowAccountHistory(string bankAccount)
         {
-BankAccount account = Bank.GetBankAccountByNumber(bankAccount);
+            BankAccount account = Bank.GetBankAccountByNumber(bankAccount);
             if (account == null)
             {
-                UI.DisplayMessage("This account does not exsist", ConsoleColor.Red, ConsoleColor.Red);
+                UI.DisplayMessage("This account does not exist", ConsoleColor.Red, ConsoleColor.Red);
             }
             else
             {

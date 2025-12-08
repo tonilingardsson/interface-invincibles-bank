@@ -22,7 +22,7 @@ namespace The_Invincible_Bank
         public BankAccount(string name, string currencyType, string accountNumber)
         {
             Name = name;
-            Sum = 10m;
+            Sum = Currency.Convert("SEK", currencyType, 10);
             CurrencyType = currencyType;
             AccountNumber = accountNumber;
             //Create filename based on account number
