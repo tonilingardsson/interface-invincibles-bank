@@ -258,15 +258,13 @@ namespace The_Invincible_Bank
                 {
                     return false;
                 }
-                if (UserAccounts[currentUserAccount] is Customer)
+                if (UserAccounts[currentUserAccount] is Customer customer)
                 {
-                    var customer = UserAccounts[currentUserAccount] as Customer;
                     Menu.CustomerMenu(customer);
                     currentUserAccount = -2;
                 }
-                else if (UserAccounts[currentUserAccount] is Admin)
+                else if (UserAccounts[currentUserAccount] is Admin admin)
                 {
-                    var admin = UserAccounts[currentUserAccount] as Admin;
                     Menu.AdminMenu(admin);
                     currentUserAccount = -2;
                 }
