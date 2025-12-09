@@ -107,13 +107,10 @@ namespace The_Invincible_Bank
                 );
 
                 UI.DisplayMessage($"Transfer completed: {transfer}");
-
-
+            }
                 // 4. Empty the list after processing all transfers
                 ListOfTransfers.Clear();
-
                 UI.DisplayMessage("=== All Transfers Processed ===\n");
-            }
         }
 
         static private bool CheckFounds(BankAccount senderAccount, decimal sum)
