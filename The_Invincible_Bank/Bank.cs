@@ -283,7 +283,7 @@ namespace The_Invincible_Bank
                         currentUserAccount = -2;
                     }
                 }
-                exit = false;
+                /*exit = false*/;
             }
             return true;
         }
