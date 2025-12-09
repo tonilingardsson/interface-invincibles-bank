@@ -193,7 +193,15 @@ namespace The_Invincible_Bank
             {
                 UI.DisplayMessage("This is not a valid security number, please try again", ConsoleColor.Red, ConsoleColor.Red);
             }
-
+            //Checks if the account exists in the locked out customer list. 
+            foreach (var user in LockedCustomerAccounts)
+            {
+                if (user.SecurityNumber == inputSecurityNumber)
+                {
+                    UI.DisplayMessage("This account is locked out of our system. Please contact Admin for support.", ConsoleColor.Red, ConsoleColor.Red);
+                    return -2;
+                }
+            }
             //check if account exists in the user account list
             foreach (var user in UserAccounts)
             {
@@ -265,7 +273,7 @@ namespace The_Invincible_Bank
                 {
                     exit = true;
                 }
-                if (currentUserAccount > 0)
+                if (currentUserAccount > -1)
                 {
                     if (UserAccounts[currentUserAccount] is Customer customer)
                     {

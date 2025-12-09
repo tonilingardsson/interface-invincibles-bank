@@ -32,9 +32,31 @@ namespace The_Invincible_Bank
 
             UI.DisplayMessage("Account was created");
         }
-        private void UpdateCurrencyValue()
+        public void HandleLockedAccounts()
         {
+            string accounts = string.Empty;
+            int index = 1;
+            accounts += "Locked accounts: \n\n";
+            int element = 0;
+            foreach (var account in Bank.LockedCustomerAccounts)
+            {
+                accounts += "Index: " + index + ": ";
+                accounts += account.SecurityNumber;
+                accounts += "\n";
+                index ++;
+            }
 
+            UI.DisplayMessage("Enter index of account you wish to unlock, press 0 to go back to menu.");
+            UI.DisplayMessage(accounts);
+
+            element = Input.GetNumberFromUser(0, index - 1);
+
+            if ((element > 0 && element <= Bank.LockedCustomerAccounts.Count()))
+            {
+                UI.DisplayMessage("Account " + Bank.LockedCustomerAccounts[element - 1].SecurityNumber + " has been reinstated.");
+                Bank.LockedCustomerAccounts.RemoveAt(element - 1);
+                UI.WriteContinueMessage();
+            }
         }
     }
 }
