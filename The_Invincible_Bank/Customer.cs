@@ -52,13 +52,13 @@ namespace The_Invincible_Bank
             UI.DisplayMessage("2: Which account do you want to deposit to?\n" +
                 "You can also transfer to other customer accounts." );
             ShowAccounts();
-            BankAccount ReceaverAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
+            BankAccount receaverAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
             Console.Clear();
             UI.DisplayMessage("3: In the currency of the withdrawal account: " + senderAccount.CurrencyType + ", how much money do you want to transfer?\n" +
                 " Current founds: " + Math.Round(senderAccount.Sum, 2));
             decimal amount = Input.GetDecimalFromUser();
             Console.Clear();
-            Bank.Transfer(senderAccount, ReceaverAccount, amount);
+            Bank.Transfer(senderAccount, receaverAccount, amount);
         }
 
         public void BorrowMoney()
@@ -121,5 +121,72 @@ namespace The_Invincible_Bank
             //Make sure to generate a bank account number that does not already EXSIST IN THE LIST!
             //Användaren ska även få en ränta på sitt nya konto. 1%
         }
+
+        // Deposit money into bank account
+        public void DepositMoney()
+        {
+
+            // Show users their accounts
+            ShowAccounts();
+            UI.DisplayMessage("Which account do you want to deposit to?");
+
+            // Get account number from user
+            string accountNumber = Input.GetAccountNumberFromUser();
+            BankAccount account = Bank.GetBankAccountByNumber(accountNumber);
+
+            // Validate the account exists and is owned by the user
+            if (account == null)
+            {
+                UI.DisplayMessage("This account does not exist.", ConsoleColor.Red, ConsoleColor.Red);
+                return;
+            }
+
+            if (!Bank.CheckIfOwnerOfThisAccount(account))
+            {
+                UI.DisplayMessage("You do not own this account!", ConsoleColor.Red, ConsoleColor.Red);
+                return;
+            }
+
+            Console.Clear();
+
+            // Get deposit amount from user
+            UI.DisplayMessage("How much money do you want to deposit?");
+            decimal amount = Input.GetDecimalFromUser();
+
+            // Validate amount
+            if (amount <= 0)
+            {
+            UI.DisplayMessage("Deposit amount must be greater than zero.", ConsoleColor.Red, ConsoleColor.Red);
+            return;
+            }
+
+            Console.Clear();
+
+            // Perform the deposit 
+            account.Deposit(amount);
+
+            // Show success message with new balance
+            string symbol = GetCurrencySymbol(account.CurrencyType);
+            UI.DisplayMessage($"Successfully desposited {amount:N2} {symbol} to account {account.Name} ({account.AccountNumber})", ConsoleColor.Green, ConsoleColor.Green);
+            UI.DisplayMessage($"New Balance: {account.Sum:N2} {symbol}");
+        }
+
+        // Fix the lack of currencySymbol
+        private string GetCurrencySymbol(string currencyCode)
+{
+    if (string.IsNullOrWhiteSpace(currencyCode))
+        return string.Empty;
+
+    var c = currencyCode.Trim().ToUpperInvariant();
+
+    return c switch
+    {
+        "SEK" => "kr",
+        "USD" => "$",
+        "EUR" => "€",
+        "GBP" => "£",
+        _ => c + " "
+    };
+}
     }
 }
