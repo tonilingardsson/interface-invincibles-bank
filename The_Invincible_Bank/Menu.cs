@@ -15,9 +15,9 @@ namespace The_Invincible_Bank
             while (!exit)
             {
                 Console.Clear();
-                UI.DisplayMessage("1: Create new user\n2: Update currency value\n3: Log out");
+                UI.DisplayMessage("1: Create new user\n2: Update currency value\n3: Handle locked accounts\n4: Log out");
 
-                switch (Input.GetNumberFromUser(1, 3))
+                switch (Input.GetNumberFromUser(1, 4))
                 {
                     case 1:
                         Console.Clear();
@@ -35,6 +35,9 @@ namespace The_Invincible_Bank
                         UI.WriteContinueMessage();
                         break;
                     case 3:
+                        admin.HandleLockedAccounts();
+                        break;
+                    case 4:
                         Console.Clear();
                         exit = true;
                         break;

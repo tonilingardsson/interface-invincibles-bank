@@ -52,13 +52,13 @@ namespace The_Invincible_Bank
             UI.DisplayMessage("2: Which account do you want to deposit to?\n" +
                 "You can also transfer to other customer accounts." );
             ShowAccounts();
-            BankAccount ReceaverAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
+            BankAccount receaverAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
             Console.Clear();
             UI.DisplayMessage("3: In the currency of the withdrawal account: " + senderAccount.CurrencyType + ", how much money do you want to transfer?\n" +
                 " Current founds: " + Math.Round(senderAccount.Sum, 2));
             decimal amount = Input.GetDecimalFromUser();
             Console.Clear();
-            Bank.Transfer(senderAccount, ReceaverAccount, amount);
+            Bank.Transfer(senderAccount, receaverAccount, amount);
         }
 
         public void BorrowMoney()

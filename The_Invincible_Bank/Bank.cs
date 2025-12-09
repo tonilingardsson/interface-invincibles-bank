@@ -13,6 +13,7 @@ namespace The_Invincible_Bank
     internal class Bank
     {
         static public List<User> UserAccounts { get; private set; }
+        static public List<Customer> LockedCustomerAccounts { get; private set; }
 
         static private int currentUserAccount = -1;
         // Holds the all the transfers
@@ -24,6 +25,7 @@ namespace The_Invincible_Bank
             var customertwo = new Customer(3333, "3333");
             customertwo.CreateBankAccount("Vacation savings", "SEK"); //Funktion finns inte ännu
             UserAccounts = new List<User>();
+            LockedCustomerAccounts = new List<Customer>();
 
             UserAccounts.Add(adminOne);
             UserAccounts.Add(customerOne);
@@ -188,7 +190,15 @@ namespace The_Invincible_Bank
             {
                 UI.DisplayMessage("This is not a valid security number, please try again", ConsoleColor.Red, ConsoleColor.Red);
             }
-
+            //Checks if the account exists in the locked out customer list. 
+            foreach (var user in LockedCustomerAccounts)
+            {
+                if (user.SecurityNumber == inputSecurityNumber)
+                {
+                    UI.DisplayMessage("This account is locked out of our system. Please contact Admin for support.", ConsoleColor.Red, ConsoleColor.Red);
+                    return -2;
+                }
+            }
             //check if account exists in the user account list
             foreach (var user in UserAccounts)
             {
@@ -210,8 +220,12 @@ namespace The_Invincible_Bank
                             userLoginTries++;
                             if (userLoginTries == 3)
                             {
-                                UI.DisplayMessage("You have failed to enter the right credentials too many times.\nClosing system....", ConsoleColor.Red, ConsoleColor.Red);
-                                return -1;
+                                if (user is Customer customer)
+                                {
+                                    UI.DisplayMessage("You have failed to enter the right credentials too many times.\nThis account is locked out of our system. Contact admin for support.", ConsoleColor.Red, ConsoleColor.Red);
+                                    LockedCustomerAccounts.Add(customer);
+                                    return -1;
+                                }                
                             }
                         }
                     }
@@ -246,30 +260,31 @@ namespace The_Invincible_Bank
         {
             //Koden börjar och slutar här.
             UI.DisplayLoggo();
-            bool exist = false;
+            bool exit = false;
 
-            while (!exist)
+            while (!exit)
             {
-                currentUserAccount = UserLogIn(); //Logs in to user and sets the current user index
-                if (currentUserAccount == -1) //The user failed to login within 3 tries. 
+                currentUserAccount = UserLogIn();
+     
+                if (currentUserAccount == -1)
                 {
-                    return false;
+                    exit = true;
                 }
-                if (UserAccounts[currentUserAccount] is Customer)
+                if (currentUserAccount > -1)
                 {
-                    var customer = UserAccounts[currentUserAccount] as Customer;
-                    Menu.CustomerMenu(customer);
-                    currentUserAccount = -2;
+                    if (UserAccounts[currentUserAccount] is Customer customer)
+                    {
+                        Menu.CustomerMenu(customer);
+                        currentUserAccount = -2;
+                    }
+                    else if (UserAccounts[currentUserAccount] is Admin admin)
+                    {
+                        Menu.AdminMenu(admin);
+                        currentUserAccount = -2;
+                    }
                 }
-                else if (UserAccounts[currentUserAccount] is Admin)
-                {
-                    var admin = UserAccounts[currentUserAccount] as Admin;
-                    Menu.AdminMenu(admin);
-                    currentUserAccount = -2;
-                }
+                exit = false;
             }
-
-
             return true;
         }
     }
