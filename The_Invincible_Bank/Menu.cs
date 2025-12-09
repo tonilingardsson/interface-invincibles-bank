@@ -38,6 +38,7 @@ namespace The_Invincible_Bank
                         Console.Clear();
                         exit = true;
                         break;
+
                 }
             }
         }
