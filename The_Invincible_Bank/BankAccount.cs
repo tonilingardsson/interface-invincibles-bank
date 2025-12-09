@@ -51,8 +51,6 @@ namespace The_Invincible_Bank
             if (amount > 0)
             {
                 Sum += amount;
-                WriteToFile($"Deposited {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
-                //UI.DisplayMessage($"Deposited {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
             }
         }
         public void Withdraw(decimal amount)
@@ -60,8 +58,7 @@ namespace The_Invincible_Bank
             if (amount > 0 && amount <= Sum)
             {
                 Sum -= amount;
-                WriteToFile($"Withdrew {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
-                //UI.DisplayMessage($"Withdrew {amount} {CurrencyType}. New balance: {Sum} {CurrencyType}");
+
             }
             else
             {
