@@ -73,6 +73,7 @@ namespace The_Invincible_Bank
             else
             {
                 Console.Clear();
+                UI.DisplayMessage($"The highest amount you can borrow is {account.Sum * 5} {account.CurrencyType}.", ConsoleColor.Blue);
                 UI.DisplayMessage("2: How much money do you want to borrow?");
                 decimal amount = Input.GetDecimalFromUser();
                 if (!Bank.Borrow(account, amount))
