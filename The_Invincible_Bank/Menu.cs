@@ -49,9 +49,9 @@ namespace The_Invincible_Bank
             while (!exist)
             {
                 Console.Clear();
-                UI.DisplayMessage("1: Show Accounts\n2: Create new account\n3: Transfer money \n4: Convert account currency\n5: Show account history\n6: Borrow money\n7: Log out");
+                UI.DisplayMessage("1: Show Accounts\n2: Create new account\n3: Transfer money \n4: Deposit money\n5: Convert account currency\n6: Show account history\n7: Borrow money\n8: Log out");
 
-                switch (Input.GetNumberFromUser(1, 7))
+                switch (Input.GetNumberFromUser(1, 8))
                 {
                     case 1:
                         Console.Clear();
@@ -71,22 +71,27 @@ namespace The_Invincible_Bank
                         break;
                     case 4:
                         Console.Clear();
+                        customer.DepositMoney();
+                        UI.WriteContinueMessage();
+                        break;
+                    case 5:
+                        Console.Clear();
                         //customer.ConvertAccountCurrency(Input.GetNumberFromUser, Input.GetCurrency())
                         UI.DisplayMessage("This function isn't available at this moment.");
                         UI.WriteContinueMessage();
                         break;
-                    case 5:
+                    case 6:
                         Console.Clear();
                         customer.ShowAccounts();
                         customer.ShowAccountHistory(Input.GetAccountNumberFromUser());
                         UI.WriteContinueMessage();
                         break;
-                    case 6:
+                    case 7:
                         Console.Clear();
                         customer.BorrowMoney();
                         UI.WriteContinueMessage();
                         break;
-                    case 7:
+                    case 8:
                         Console.Clear();
                         exist = true;
                         break;
