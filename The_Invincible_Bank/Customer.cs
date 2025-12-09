@@ -27,7 +27,7 @@ namespace The_Invincible_Bank
                 number = new Random().Next(0, 10);
                 newSecurityNumber += number;
             }
-            
+
             accountOne = new BankAccount("Bank Account", "SEK", newSecurityNumber);
             Accounts = new List<BankAccount> { accountOne };
         }
@@ -50,7 +50,7 @@ namespace The_Invincible_Bank
             BankAccount senderAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
             Console.Clear();
             UI.DisplayMessage("2: Which account do you want to deposit to?\n" +
-                "You can also transfer to other customer accounts." );
+                "You can also transfer to other customer accounts.");
             ShowAccounts();
             BankAccount receaverAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
             Console.Clear();
@@ -70,7 +70,7 @@ namespace The_Invincible_Bank
             {
                 UI.DisplayMessage("The account you entered isn't owned by you or doesnt exist in our system", ConsoleColor.Red, ConsoleColor.Red);
             }
-            else 
+            else
             {
                 Console.Clear();
                 UI.DisplayMessage("2: How much money do you want to borrow?");
@@ -94,16 +94,9 @@ namespace The_Invincible_Bank
             }
             else
             {
-            UI.DisplayMessage("Transaction history for account:");
-            UI.DisplayFile(Bank.GetBankAccountByNumber(bankAccount).FilePath);
-        }
-        }
-
-        public void ConvertAccountCurrency(int bankAccount, string currencyToConvertTo)
-        {
-            //Konvertera om ett konto till den nya valutan igenom att
-            //1: konvertera valutan
-            //2: ändra valuta typ på kontot.
+                UI.DisplayMessage("Transaction history for account:");
+                UI.DisplayFile(Bank.GetBankAccountByNumber(bankAccount).FilePath);
+            }
         }
 
         public void CreateBankAccount(string accountName, string currencyType)
@@ -112,7 +105,7 @@ namespace The_Invincible_Bank
             {
                 Random? rnd = new Random();
                 string accountNumber = rnd.Next(0, 9999).ToString("D4");
-                
+
                 BankAccount newAccount = new BankAccount(accountName, currencyType, accountNumber);
                 // Add it to the customer's account list
                 Accounts.Add(newAccount);
@@ -155,8 +148,8 @@ namespace The_Invincible_Bank
             // Validate amount
             if (amount <= 0)
             {
-            UI.DisplayMessage("Deposit amount must be greater than zero.", ConsoleColor.Red, ConsoleColor.Red);
-            return;
+                UI.DisplayMessage("Deposit amount must be greater than zero.", ConsoleColor.Red, ConsoleColor.Red);
+                return;
             }
 
             Console.Clear();
@@ -172,20 +165,20 @@ namespace The_Invincible_Bank
 
         // Fix the lack of currencySymbol
         private string GetCurrencySymbol(string currencyCode)
-{
-    if (string.IsNullOrWhiteSpace(currencyCode))
-        return string.Empty;
+        {
+            if (string.IsNullOrWhiteSpace(currencyCode))
+                return string.Empty;
 
-    var c = currencyCode.Trim().ToUpperInvariant();
+            var c = currencyCode.Trim().ToUpperInvariant();
 
-    return c switch
-    {
-        "SEK" => "kr",
-        "USD" => "$",
-        "EUR" => "€",
-        "GBP" => "£",
-        _ => c + " "
-    };
-}
+            return c switch
+            {
+                "SEK" => "kr",
+                "USD" => "$",
+                "EUR" => "€",
+                "GBP" => "£",
+                _ => c + " "
+            };
+        }
     }
 }
