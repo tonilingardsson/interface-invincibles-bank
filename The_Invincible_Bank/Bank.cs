@@ -16,7 +16,7 @@ namespace The_Invincible_Bank
         static public List<Customer> LockedCustomerAccounts { get; private set; }
 
         static private int currentUserAccount = -1;
-        // Holds the all the transfers
+        // Holds the all the transfers/test
         static private List<Transfer> ListOfTransfers = new List<Transfer>();
         public Bank()
         {
