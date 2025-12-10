@@ -45,20 +45,69 @@ namespace The_Invincible_Bank
 
         public void TransferMoney()
         {
-            UI.DisplayMessage("1: Which account do you want to withdraw from?");
+            BankAccount senderAccount = null;
+            BankAccount receaverAccount = null;
+            int userInput;
+            string userInputTwo;
+            bool exit = false;
+
+            UI.DisplayMessage("Which account do you want to withdraw from?\n0: Exit");
             ShowAccounts();
-            BankAccount senderAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
-            Console.Clear();
-            UI.DisplayMessage("2: Which account do you want to deposit to?\n" +
-                "You can also transfer to other customer accounts.");
-            ShowAccounts();
-            BankAccount receaverAccount = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
-            Console.Clear();
-            UI.DisplayMessage("3: In the currency of the withdrawal account: " + senderAccount.CurrencyType + ", how much money do you want to transfer?\n" +
-                " Current founds: " + Math.Round(senderAccount.Sum, 2));
-            decimal amount = Input.GetDecimalFromUser();
-            Console.Clear();
-            Bank.Transfer(senderAccount, receaverAccount, amount);
+
+            userInput = Input.GetNumberFromUser(0, Accounts.Count);
+
+            if (userInput == 0)
+            {
+                exit = true;
+            }
+            if (!exit)
+            {
+                senderAccount = Accounts.ElementAt(userInput - 1);
+
+
+                while (receaverAccount == null && !exit)
+                {
+                    Console.Clear();
+                    UI.DisplayMessage("2: Which account do you want to deposit to?\nYou can also transfer to other customer accounts.\n0: Exit");
+                    ShowAccounts();
+                    userInputTwo = Console.ReadLine();
+
+                    if (userInputTwo == "0") //Checks if the user wants to leave
+                    {
+                        exit = true;
+                    }
+                    else if (int.TryParse(userInputTwo, out userInput) && userInput > 0 && userInput <= Accounts.Count) //Checks if the user chose an index from the list
+                    {
+                        receaverAccount = Accounts.ElementAt(userInput - 1);
+                    }
+                    else if (userInputTwo.Length == 4 && (int.TryParse(userInputTwo, out userInput)) == true) //Checks if the user entered a bank account number
+                    {
+                        while ((receaverAccount = Bank.GetBankAccountByNumber(userInputTwo)) == null)
+                        {
+                            UI.DisplayMessage("Invalid account.\n1: Try again.\n2: Exit");
+
+                            if (Input.GetNumberFromUser(1, 2) == 2)
+                            {
+                                exit = true;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        UI.DisplayMessage("You've not entered a valid input", ConsoleColor.Red, ConsoleColor.Red);
+                        UI.WriteContinueMessage();
+                    }
+                }
+                if (!exit)
+                {
+                    Console.Clear();
+                    UI.DisplayMessage("3: In the currency of the withdrawal account: " + senderAccount.CurrencyType + ", how much money do you want to transfer?\nCurrent founds: " + Math.Round(senderAccount.Sum, 2) + " " + senderAccount.CurrencyType);
+                    decimal amount = Input.GetDecimalFromUser();
+                    Console.Clear();
+                    Bank.Transfer(senderAccount, receaverAccount, amount);
+                }
+            }
         }
 
         public void BorrowMoney()
