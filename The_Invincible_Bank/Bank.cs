@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Reflection.PortableExecutable;
+using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,13 +16,16 @@ namespace The_Invincible_Bank
     internal class Bank
     {
         static public List<User> UserAccounts { get; private set; }
-        static public List<Customer> LockedCustomerAccounts { get; private set; }
-
+        static private List<Transfer> ListOfTransfers = new List<Transfer>(); // Holds the all the transfers/test
+        static public List<Customer> LockedCustomerAccounts { get; private set; } // Prision for customers who dont remeber their password >:3 
         static private int currentUserAccount = -1;
-        // Holds the all the transfers/test
-        static private List<Transfer> ListOfTransfers = new List<Transfer>();
+
+        static public DateTime lastRunTime = DateTime.Now;
+        static public readonly TimeSpan interval = TimeSpan.FromSeconds(40);
+
         public Bank()
         {
+
             var adminOne = new Admin(1111, "1111");//test
             var customerOne = new Customer(2222, "2222");
             var customertwo = new Customer(3333, "3333");
@@ -80,9 +86,8 @@ namespace The_Invincible_Bank
             UI.DisplayMessage("Transfer failed: Insufficient founds or invalid receiver account.", ConsoleColor.Red, ConsoleColor.Red);
             return false;
         }
-        public void ProcessTransfers()
+        static public void ProcessTransfers()
         {
-            UI.DisplayMessage("\n=== Processing All Transfers ===");
 
             // Loop through each transfer in the list
             foreach (Transfer transfer in ListOfTransfers)
@@ -103,11 +108,10 @@ namespace The_Invincible_Bank
                     $"Received {transfer.Amount} {transfer.CurrencyType} from account {transfer.ToAccount.AccountNumber}"
                 );
 
-                UI.DisplayMessage($"Transfer completed: {transfer}");
+                UI.DisplayMessage("All queued transferes processed", ConsoleColor.DarkGreen, ConsoleColor.DarkGreen);
             }
                 // 4. Empty the list after processing all transfers
                 ListOfTransfers.Clear();
-                UI.DisplayMessage("=== All Transfers Processed ===\n");
         }
 
         static private bool CheckFounds(BankAccount senderAccount, decimal sum)
@@ -166,7 +170,7 @@ namespace The_Invincible_Bank
             }
             return false;
         }
-        private int UserLogIn() //If this returns -1, the user failed to log in within 3 tries
+        private int UserLogIn() //Returns -1 to exit program
         {
 
             int inputSecurityNumber;
@@ -207,7 +211,7 @@ namespace The_Invincible_Bank
                     {
                         while (!user.LogIn(inputSecurityNumber, inputPassword)) //As long as the password is wrong
                         {
-                            UI.DisplayMessage("Password: ", ConsoleColor.Red, ConsoleColor.Red); //Replace
+                            UI.DisplayMessage("Password: "); //Replace
 
                             // ---
                             inputPassword = Console.ReadLine();
@@ -216,7 +220,7 @@ namespace The_Invincible_Bank
                             if (!user.LogIn(inputSecurityNumber, inputPassword))
                             {
                                 Console.Clear();
-                                UI.DisplayMessage("Wrong Password"); //Replace
+                                UI.DisplayMessage("Wrong Password", ConsoleColor.Red, ConsoleColor.Red); //Replace
 
                                 userLoginTries++;
                                 if (userLoginTries == 3)
