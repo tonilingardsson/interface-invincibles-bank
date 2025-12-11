@@ -176,49 +176,49 @@ namespace The_Invincible_Bank
         public void DepositMoney()
         {
 
-            // Show users their accounts
+
+            int userInput;
+            bool exit = false;
+            BankAccount account = null;
+
+            UI.DisplayMessage("1 Which account do you want the money to be deposited to?\n0: Exit");
             ShowAccounts();
-            UI.DisplayMessage("Which account do you want to deposit to?");
 
-            // Get account number from user
-            string accountNumber = Input.GetAccountNumberFromUser();
-            BankAccount account = Bank.GetBankAccountByNumber(accountNumber);
+            userInput = Input.GetNumberFromUser(0, Accounts.Count);
 
-            // Validate the account exists and is owned by the user
-            if (account == null)
+            if (userInput == 0)
             {
-                UI.DisplayMessage("This account does not exist.", ConsoleColor.Red, ConsoleColor.Red);
-                return;
+                exit = true;
             }
 
-            if (!Bank.CheckIfOwnerOfThisAccount(account))
+            if (!exit)
             {
-                UI.DisplayMessage("You do not own this account!", ConsoleColor.Red, ConsoleColor.Red);
-                return;
+                account = Accounts.ElementAt(userInput - 1);
+                Console.Clear();
+
+                // Get deposit amount from user
+                UI.DisplayMessage("How much money do you want to deposit?");
+                decimal amount = Input.GetDecimalFromUser();
+
+                // Validate amount
+                if (amount <= 0)
+                {
+                    UI.DisplayMessage("Invalid amount.", ConsoleColor.Red, ConsoleColor.Red);
+                    return;
+                }
+
+                Console.Clear();
+
+                // Perform the deposit 
+                account.Deposit(amount);
+
+                // Show success message with new balance
+                string symbol = GetCurrencySymbol(account.CurrencyType);
+                UI.DisplayMessage($"Successfully desposited {amount:N2} {symbol} to account {account.Name} ({account.AccountNumber})", ConsoleColor.Green, ConsoleColor.Green);
+                UI.DisplayMessage($"New Balance: {account.Sum:N2} {symbol}");
             }
 
-            Console.Clear();
 
-            // Get deposit amount from user
-            UI.DisplayMessage("How much money do you want to deposit?");
-            decimal amount = Input.GetDecimalFromUser();
-
-            // Validate amount
-            if (amount <= 0)
-            {
-                UI.DisplayMessage("Deposit amount must be greater than zero.", ConsoleColor.Red, ConsoleColor.Red);
-                return;
-            }
-
-            Console.Clear();
-
-            // Perform the deposit 
-            account.Deposit(amount);
-
-            // Show success message with new balance
-            string symbol = GetCurrencySymbol(account.CurrencyType);
-            UI.DisplayMessage($"Successfully desposited {amount:N2} {symbol} to account {account.Name} ({account.AccountNumber})", ConsoleColor.Green, ConsoleColor.Green);
-            UI.DisplayMessage($"New Balance: {account.Sum:N2} {symbol}");
         }
 
         // Fix the lack of currencySymbol
