@@ -77,9 +77,8 @@ namespace The_Invincible_Bank
                 UI.DisplayMessage("A sum of " + sum + " " + senderAccount.CurrencyType + " has been tranfered from account: " + senderAccount.AccountNumber + " to account: " + receiverAccount.AccountNumber, ConsoleColor.Green, ConsoleColor.Green);
                 return true;
             }
-            UI.DisplayMessage("Transfer failed: Invalid sender or receiver account.", ConsoleColor.Red, ConsoleColor.Red);
+            UI.DisplayMessage("Transfer failed: Insufficient founds or invalid receiver account.", ConsoleColor.Red, ConsoleColor.Red);
             return false;
-
         }
         public void ProcessTransfers()
         {
@@ -208,7 +207,7 @@ namespace The_Invincible_Bank
                     {
                         while (!user.LogIn(inputSecurityNumber, inputPassword)) //As long as the password is wrong
                         {
-                            UI.DisplayMessage("Password: "); //Replace
+                            UI.DisplayMessage("Password: ", ConsoleColor.Red, ConsoleColor.Red); //Replace
 
                             // ---
                             inputPassword = Console.ReadLine();
@@ -290,7 +289,6 @@ namespace The_Invincible_Bank
                         currentUserAccount = -2;
                     }
                 }
-                /*exit = false*/;
             }
             return true;
         }

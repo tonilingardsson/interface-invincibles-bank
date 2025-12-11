@@ -37,7 +37,7 @@ namespace The_Invincible_Bank
             }
 
             //Top row
-            WriteColor("\n╔", frameColor);
+            WriteColor("╔", frameColor);
             WriteColor(new string('═', maxStringLegnth + padding * 2), frameColor); //Creates a string containing ═ with the legnth of the longest string
             WriteColor("╗\n", frameColor);
 
@@ -53,7 +53,8 @@ namespace The_Invincible_Bank
             //Bottom row
             WriteColor("╚", frameColor);
             WriteColor(new string('═', maxStringLegnth + padding * 2), frameColor); //Creates a string containing ═ with the legnth of the longest string
-            WriteColor("╝\n", frameColor);
+            WriteColor("╝", frameColor);
+            Console.WriteLine();
         }
         static public void DisplayFile(string filename)
         {
