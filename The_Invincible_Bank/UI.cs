@@ -37,7 +37,7 @@ namespace The_Invincible_Bank
             }
 
             //Top row
-            WriteColor("╔", frameColor);
+            WriteColor("\n╔", frameColor);
             WriteColor(new string('═', maxStringLegnth + padding * 2), frameColor); //Creates a string containing ═ with the legnth of the longest string
             WriteColor("╗\n", frameColor);
 

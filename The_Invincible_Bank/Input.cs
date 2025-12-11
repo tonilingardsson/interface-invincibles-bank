@@ -13,11 +13,11 @@ namespace The_Invincible_Bank
         {
             int choice;
 
-            UI.DisplayMessage("Your choice: ");
+            UI.DisplayMessage("Your choice: ", ConsoleColor.DarkGray, ConsoleColor.DarkGray);
 
             while (!int.TryParse(Console.ReadLine(), out choice) || choice < min || choice > max)
             {
-                UI.DisplayMessage($"You have to choose between {min} and {max}");
+                UI.DisplayMessage($"You have to choose between {min} and {max}", ConsoleColor.Red, ConsoleColor.Red);
             }
             return choice;
         }
@@ -29,7 +29,7 @@ namespace The_Invincible_Bank
             {
                 if (amount <= 0)
                 {
-                    UI.DisplayMessage($"The amount you want to send must be above zero!");
+                    UI.DisplayMessage($"The amount you want to send must be above zero!", ConsoleColor.Red, ConsoleColor.Red);
                 }
 
             }

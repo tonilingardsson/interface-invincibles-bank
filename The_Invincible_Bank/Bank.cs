@@ -58,8 +58,6 @@ namespace The_Invincible_Bank
 
         public static bool Transfer(BankAccount senderAccount, BankAccount receiverAccount, decimal sum)
         {
-            //BankAccount senderAccount = GetBankAccountByNumber(senderAccountNumber);
-            //BankAccount receiverAccount = GetBankAccountByNumber(receavingAccountNumber);
 
             if (senderAccount != null && receiverAccount != null && CheckFounds(senderAccount, sum) && CheckIfOwnerOfThisAccount(senderAccount))
             {
@@ -163,7 +161,7 @@ namespace The_Invincible_Bank
                 }
             }
 
-            if (totalWorth * 5 > sum) //Checks if the the worth is more or less than the borrow amount
+            if (totalWorth * 5 >= sum) //Checks if the the worth is more or less than the borrow amount
             {
                 return true;
             }
@@ -177,6 +175,7 @@ namespace The_Invincible_Bank
             string inputPassword = string.Empty;
             int userIndex = 0;
             int userLoginTries = 0;
+            bool tryAgain = true;
 
             UI.DisplayMessage("1: Log in\n2: Exit program");
             if (Input.GetNumberFromUser(1, 2) == 2)
@@ -185,68 +184,76 @@ namespace The_Invincible_Bank
             }
             Console.Clear();
 
-            UI.DisplayMessage("Security number: ");
-            while (!int.TryParse(Console.ReadLine(), out inputSecurityNumber) && inputSecurityNumber.ToString().Length != 4)
+            while (tryAgain)
             {
-                UI.DisplayMessage("This is not a valid security number, please try again", ConsoleColor.Red, ConsoleColor.Red);
-            }
-            //Checks if the account exists in the locked out customer list. 
-            foreach (var user in LockedCustomerAccounts)
-            {
-                if (user.SecurityNumber == inputSecurityNumber)
+
+                UI.DisplayMessage("Security number: ");
+                while (!int.TryParse(Console.ReadLine(), out inputSecurityNumber) && inputSecurityNumber.ToString().Length != 4)
                 {
-                    UI.DisplayMessage("This account is locked out of our system. Please contact Admin for support.", ConsoleColor.Red, ConsoleColor.Red);
-                    return -2;
+                    UI.DisplayMessage("This is not a valid security number, please try again", ConsoleColor.Red, ConsoleColor.Red);
                 }
-            }
-            //check if account exists in the user account list
-            foreach (var user in UserAccounts)
-            {
-                if (user.SecurityNumber == inputSecurityNumber) //If we found the security number in the list of users
+                //Checks if the account exists in the locked out customer list. 
+                foreach (var user in LockedCustomerAccounts)
                 {
-                    while (!user.LogIn(inputSecurityNumber, inputPassword)) //As long as the password is wrong
+                    if (user.SecurityNumber == inputSecurityNumber)
                     {
-                        UI.DisplayMessage("Password: "); //Replace
-
-                        // ---
-                        inputPassword = Console.ReadLine();
-                        // ---
-
-                        if (!user.LogIn(inputSecurityNumber, inputPassword))
+                        UI.DisplayMessage("This account is locked out of our system. Please contact Admin for support.", ConsoleColor.Red, ConsoleColor.Red);
+                        return -2;
+                    }
+                }
+                //check if account exists in the user account list
+                foreach (var user in UserAccounts)
+                {
+                    if (user.SecurityNumber == inputSecurityNumber) //If we found the security number in the list of users
+                    {
+                        while (!user.LogIn(inputSecurityNumber, inputPassword)) //As long as the password is wrong
                         {
-                            Console.Clear();
-                            UI.DisplayMessage("Wrong Password"); //Replace
+                            UI.DisplayMessage("Password: "); //Replace
 
-                            userLoginTries++;
-                            if (userLoginTries == 3)
+                            // ---
+                            inputPassword = Console.ReadLine();
+                            // ---
+
+                            if (!user.LogIn(inputSecurityNumber, inputPassword))
                             {
-                                if (user is Customer customer)
+                                Console.Clear();
+                                UI.DisplayMessage("Wrong Password"); //Replace
+
+                                userLoginTries++;
+                                if (userLoginTries == 3)
                                 {
-                                    UI.DisplayMessage("You have failed to enter the right credentials too many times.\nThis account is locked out of our system. Contact admin for support.", ConsoleColor.Red, ConsoleColor.Red);
-                                    LockedCustomerAccounts.Add(customer);
-                                    return -1;
-                                }                
+                                    if (user is Customer customer)
+                                    {
+                                        UI.DisplayMessage("You have failed to enter the right credentials too many times.\nThis account is locked out of our system. Contact admin for support.", ConsoleColor.Red, ConsoleColor.Red);
+                                        LockedCustomerAccounts.Add(customer);
+                                        return -2;
+                                        tryAgain = false;
+                                    }
+                                }
                             }
                         }
+                        userIndex = UserAccounts.IndexOf(user);
+                        accountExists = true;
+                        tryAgain = false;
+                        break;
                     }
-                    userIndex = UserAccounts.IndexOf(user);
-                    accountExists = true;
-                    break;
                 }
-            }
-            if (!accountExists)
-            {
-                UI.DisplayMessage("This account does not exist in our bank.\nExit program or try again?\nExit program: 1 | Try again: 2");
+                if (!accountExists)
+                {
+                    UI.DisplayMessage("This account does not exist in our bank.\nExit program or try again?\nExit program: 1 | Try again: 2");
 
-                if (Input.GetNumberFromUser(1, 2) == 2)
-                {
-                    UserLogIn();
+                    if (Input.GetNumberFromUser(1, 2) == 2)
+                    {
+                        tryAgain = true;
+                        Console.Clear();
+                    }
+                    else
+                    {
+                        userIndex = -1;
+                        tryAgain = false;
+                    }
                 }
-                else
-                {
-                    userIndex = -1;
-                }
-            }
+            }   
             return userIndex; //Returns index of the user account that is logged in
         }
 
