@@ -36,11 +36,17 @@ namespace The_Invincible_Bank
         public void ShowAccounts() //Visa alla konton med hjälp av UI klassen plz
         {
             int countFrom = 1;
+            string accounts = string.Empty;
             foreach (var account in Accounts)
             {
-                UI.DisplayMessage($"{countFrom}: {account.Name}({account.AccountNumber}) - Balance: {Math.Round(account.Sum, 2)} " + account.CurrencyType);
+                if (countFrom != 1)
+                {
+                    accounts += "\n";
+                }
+                accounts += $"{countFrom}: {account.Name} ({account.AccountNumber}) - Balance: {Math.Round(account.Sum, 2)} " + account.CurrencyType;
                 countFrom++;
             }
+            UI.DisplayMessage(accounts);
         }
 
         public void TransferMoney()
@@ -143,17 +149,25 @@ namespace The_Invincible_Bank
                 }
             }
         }
-        public void ShowAccountHistory(string bankAccount)
+        public void ShowAccountHistory()
         {
-            BankAccount account = Bank.GetBankAccountByNumber(bankAccount);
-            if (account == null)
+            int userInput;
+            bool exit = false;
+            BankAccount account = null;
+
+            UI.DisplayMessage("Which acount do you want to show history for?\n0: Exit");
+            ShowAccounts();
+
+            userInput = Input.GetNumberFromUser(0, Accounts.Count);
+
+            if (userInput == 0)
             {
-                UI.DisplayMessage("This account does not exist", ConsoleColor.Red, ConsoleColor.Red);
+                exit = true;
             }
-            else
+            if (!exit)
             {
-                UI.DisplayMessage("Transaction history for account:");
-                UI.DisplayFile(Bank.GetBankAccountByNumber(bankAccount).FilePath);
+                account = Accounts.ElementAt(userInput - 1);
+                UI.DisplayFile(account.FilePath);            
             }
         }
 

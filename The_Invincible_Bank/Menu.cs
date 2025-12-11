@@ -96,8 +96,7 @@ namespace The_Invincible_Bank
                         break;
                     case 5:
                         Console.Clear();
-                        customer.ShowAccounts();
-                        customer.ShowAccountHistory(Input.GetAccountNumberFromUser());
+                        customer.ShowAccountHistory();
                         UI.WriteContinueMessage();
                         break;
                     case 6:
