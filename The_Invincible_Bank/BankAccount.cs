@@ -40,7 +40,7 @@ namespace The_Invincible_Bank
                 sw.WriteLine($"Account Number: {AccountNumber}");
                 sw.WriteLine($"Account Name: {Name}");
                 sw.WriteLine($"Currency Type: {CurrencyType}");
-                sw.WriteLine($"Balance: {Sum} {CurrencyType}");
+                sw.WriteLine($"Created: {DateTime.Now}");
                 sw.WriteLine($"--- Transactions history --- ");
             }
         }
