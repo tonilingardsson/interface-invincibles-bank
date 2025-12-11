@@ -53,7 +53,7 @@ namespace The_Invincible_Bank
 
             if ((element > 0 && element <= Bank.LockedCustomerAccounts.Count()))
             {
-                UI.DisplayMessage("Account " + Bank.LockedCustomerAccounts[element - 1].SecurityNumber + " has been reinstated.");
+                UI.DisplayMessage("Account " + Bank.LockedCustomerAccounts[element - 1].SecurityNumber + " has been reinstated.", ConsoleColor.Green, ConsoleColor.Green);
                 Bank.LockedCustomerAccounts.RemoveAt(element - 1);
                 UI.WriteContinueMessage();
             }

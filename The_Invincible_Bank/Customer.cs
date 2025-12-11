@@ -112,15 +112,23 @@ namespace The_Invincible_Bank
 
         public void BorrowMoney()
         {
+            int userInput;
+            bool exit = false;
+            BankAccount account = null;
+
+            UI.DisplayMessage("1 Which account do you want the money to be deposited to?\n0: Exit");
             ShowAccounts();
-            UI.DisplayMessage("1 Which account do you want the money to be deposited to?");
-            BankAccount account = Bank.GetBankAccountByNumber(Input.GetAccountNumberFromUser());
-            if (account == null || !Bank.CheckIfOwnerOfThisAccount(account))
+
+            userInput = Input.GetNumberFromUser(0, Accounts.Count);
+
+            if (userInput == 0)
             {
-                UI.DisplayMessage("The account you entered isn't owned by you or doesnt exist in our system", ConsoleColor.Red, ConsoleColor.Red);
+                exit = true;
             }
-            else
+
+            if(!exit)
             {
+                account = Accounts.ElementAt(userInput - 1);
                 Console.Clear();
                 UI.DisplayMessage($"The highest amount you can borrow is {account.Sum * 5} {account.CurrencyType}.", ConsoleColor.Blue);
                 UI.DisplayMessage("2: How much money do you want to borrow?");
