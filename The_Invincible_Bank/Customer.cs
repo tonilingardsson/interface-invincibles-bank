@@ -145,15 +145,24 @@ namespace The_Invincible_Bank
         }
         public void ShowAccountHistory(string bankAccount)
         {
-            BankAccount account = Bank.GetBankAccountByNumber(bankAccount);
-            if (account == null)
+            int userInput;
+            bool exit = false;
+            BankAccount account = null;
+
+            UI.DisplayMessage("Which acount do you want to show history for?\n0: Exit");
+            ShowAccounts();
+
+            userInput = Input.GetNumberFromUser(0, Accounts.Count);
+
+            if (userInput == 0)
             {
-                UI.DisplayMessage("This account does not exist", ConsoleColor.Red, ConsoleColor.Red);
+                exit = true;
             }
-            else
+            if (!exit)
             {
+                account = Accounts.ElementAt(userInput - 1);
                 UI.DisplayMessage("Transaction history for account:");
-                UI.DisplayFile(Bank.GetBankAccountByNumber(bankAccount).FilePath);
+                UI.DisplayFile(account.FilePath);            
             }
         }
 
