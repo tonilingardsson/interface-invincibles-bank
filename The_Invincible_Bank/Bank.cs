@@ -139,6 +139,8 @@ namespace The_Invincible_Bank
 
         public static bool Borrow(BankAccount bankAccount, decimal sum)
         {
+            decimal interest = sum * 0.07m;
+            decimal totalRepayment = interest + sum;
             if (CheckAccountBorrowValidity(sum))
             {
                 //Add to transfer list
@@ -146,7 +148,8 @@ namespace The_Invincible_Bank
                 {
                     bankAccount.Deposit(sum);
                 }
-                UI.DisplayMessage("An interest rate of 7% has been applied to your loan", ConsoleColor.DarkYellow, ConsoleColor.DarkYellow);
+                UI.DisplayMessage("An interest rate of 7% has been applied to your loan\n" +
+                    "Total to pay back is "+ totalRepayment +" "+bankAccount.CurrencyType+"", ConsoleColor.DarkYellow, ConsoleColor.DarkYellow);
                 return true;
             }
 
