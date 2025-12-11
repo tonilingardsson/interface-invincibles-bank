@@ -94,18 +94,18 @@ namespace The_Invincible_Bank
             {
 
                 // 1. Withdraw from sender
-                transfer.FromAccount.Withdraw(transfer.Amount);
+                transfer.FromAccount.Withdraw(transfer.FromAmount);
 
                 // 2. Deposit to receiver
-                transfer.ToAccount.Deposit(transfer.Amount);
+                transfer.ToAccount.Deposit(transfer.ToAmount);
 
                 // 3. Write transaction history to BOTH account files
                 transfer.FromAccount.WriteToFile(
-                    $"Transferred {transfer.Amount} {transfer.CurrencyType} to account {transfer.FromAccount.AccountNumber}"
+                    $"Transferred {transfer.FromAmount} {transfer.FromAccount.CurrencyType} to account {transfer.FromAccount.AccountNumber}"
                 );
 
                 transfer.ToAccount.WriteToFile(
-                    $"Received {transfer.Amount} {transfer.CurrencyType} from account {transfer.ToAccount.AccountNumber}"
+                    $"Received {transfer.ToAmount} {transfer.ToAccount.CurrencyType} from account {transfer.ToAccount.AccountNumber}"
                 );
 
                 UI.DisplayMessage("All queued transferes processed", ConsoleColor.DarkGreen, ConsoleColor.DarkGreen);

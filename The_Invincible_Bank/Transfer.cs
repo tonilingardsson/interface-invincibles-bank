@@ -11,8 +11,8 @@ namespace The_Invincible_Bank
     {
         public BankAccount FromAccount { get; private set; }  // Kontonummer pengarna kommer ifrån
         public BankAccount ToAccount { get; private set; }    // Kontonummer pengarna skall till
-        public decimal Amount { get; private set; }           // Mängden pengar (redan konverterad)
-        public string CurrencyType { get; private set; }      // Valutan för mottagarkontot
+        public decimal FromAmount { get; private set; }       // Money that will be taken from the "fromAccount"
+        public decimal ToAmount { get; private set; }         // Money that will be added to the "ToAccount"
         public DateTime Timestamp { get; private set; }       // När överföringen gjordes
 
         public Transfer(BankAccount fromAccount, BankAccount toAccount, decimal amount)
@@ -21,15 +21,10 @@ namespace The_Invincible_Bank
             ToAccount = toAccount;
 
             // Här kopplar vi ihop med Currency klassen, konvertera beloppet till mottagarens valuta
-            Amount = Currency.Convert(fromAccount.CurrencyType, toAccount.CurrencyType, amount);
+            FromAmount = amount;
+            ToAmount = Currency.Convert(fromAccount.CurrencyType, toAccount.CurrencyType, amount);
 
-            CurrencyType = toAccount.CurrencyType;
             Timestamp = DateTime.Now;
         }
-        public string GetTransferInfo()
-        {
-           return $"{Timestamp}: {Amount} {CurrencyType} from {FromAccount.AccountNumber} to {ToAccount.AccountNumber}";
-        }
-
     }
 }

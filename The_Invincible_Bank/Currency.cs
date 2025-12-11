@@ -25,7 +25,7 @@ namespace The_Invincible_Bank
 
             //Konvertera från SEK till den nya valutan
             decimal result = inSek / CurrencyList[newCurrency];
-            return result;
+            return Math.Round(result, 2);
         }
 
         // Metod för att uppdatera valutakurserna med slumpmässiga variationer
