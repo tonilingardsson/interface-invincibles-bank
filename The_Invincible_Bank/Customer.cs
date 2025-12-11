@@ -189,8 +189,6 @@ namespace The_Invincible_Bank
         // Deposit money into bank account
         public void DepositMoney()
         {
-
-
             int userInput;
             bool exit = false;
             BankAccount account = null;
@@ -225,6 +223,9 @@ namespace The_Invincible_Bank
 
                 // Perform the deposit 
                 account.Deposit(amount);
+                account.WriteToFile(
+                    $"Deposit: {amount} {account.CurrencyType}" 
+                    );
 
                 // Show success message with new balance
                 string symbol = GetCurrencySymbol(account.CurrencyType);
