@@ -25,15 +25,6 @@ namespace The_Invincible_Bank
 
             CurrencyType = toAccount.CurrencyType;
             Timestamp = DateTime.Now;
-
-            // Uppdaterade saldon
-            FromAccount.Withdraw(amount);
-            ToAccount.Deposit(Amount);
-
-            // Skriv transaktionen till båda kontonas filer
-            string info = GetTransferInfo();
-            FromAccount.WriteToFile($"Sent {amount} {fromAccount.CurrencyType} to account {ToAccount.AccountNumber}");
-            ToAccount.WriteToFile($"Received {Amount} {CurrencyType} from account {FromAccount.AccountNumber}");
         }
         public string GetTransferInfo()
         {
