@@ -217,7 +217,7 @@ namespace The_Invincible_Bank
                             UI.DisplayMessage("Password: "); //Replace
 
                             // ---
-                            inputPassword = Console.ReadLine();
+                            inputPassword = UI.HidePassword();
                             // ---
 
                             if (!user.LogIn(inputSecurityNumber, inputPassword))

@@ -21,6 +21,39 @@ namespace The_Invincible_Bank
             Console.WriteLine();
 
         }
+
+        static public string HidePassword()
+        {
+            var password = new System.Text.StringBuilder(); //StringBuilder is a mutable boi, making it possible to create one string instead of creating a bunch in the memory. 
+
+            while (true)
+            {
+                var key = Console.ReadKey(intercept: true); // true = hides input
+
+                if (key.Key == ConsoleKey.Enter) // If the ENTER key was pressed
+                {
+                    Console.WriteLine();
+                    break;
+                }
+
+                if (key.Key == ConsoleKey.Backspace) //removes a key
+                {
+                    if (password.Length > 0)
+                    {
+                        password.Remove(password.Length - 1, 1);
+                        Console.Write("\b \b"); // removes a *
+                    }
+                    continue;
+                }
+
+                // adds the char in the StringBulder and displayes a  *
+                password.Append(key.KeyChar);
+                Console.Write("*");
+            }
+
+            return password.ToString();
+
+        }
         static public void DisplayMessage(string message, ConsoleColor frameColor = ConsoleColor.White, ConsoleColor textcolor = ConsoleColor.White)
         {
             message = message.Replace("\r", "");
