@@ -43,7 +43,6 @@ namespace The_Invincible_Bank
                 sw.WriteLine($"Balance: {Sum} {CurrencyType}");
                 sw.WriteLine($"--- Transactions history --- ");
             }
-           
         }
 
         public void Deposit(decimal amount)
@@ -58,7 +57,6 @@ namespace The_Invincible_Bank
             if (amount > 0 && amount <= Sum)
             {
                 Sum -= amount;
-
             }
             else
             {
