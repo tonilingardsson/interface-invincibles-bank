@@ -136,16 +136,19 @@ namespace The_Invincible_Bank
             {
                 account = Accounts.ElementAt(userInput - 1);
                 Console.Clear();
-                UI.DisplayMessage($"The highest amount you can borrow is {account.Sum * 5} {account.CurrencyType}.", ConsoleColor.Blue);
-                UI.DisplayMessage("2: How much money do you want to borrow?");
+                UI.DisplayMessage($"The highest amount you can loan is {account.Sum * 5} {account.CurrencyType}.", ConsoleColor.Blue);
+                UI.DisplayMessage("2: How much money do you want to loan?");
                 decimal amount = Input.GetDecimalFromUser();
                 if (!Bank.Borrow(account, amount))
                 {
-                    UI.DisplayMessage("Transfer was not succesfull\nYour account did not qualify for borrowing this amount of money", ConsoleColor.Red, ConsoleColor.Red);
+                    UI.DisplayMessage("Transfer was not succesfull\nYour account did not qualify for loan this amount of money", ConsoleColor.Red, ConsoleColor.Red);
                 }
                 else
                 {
                     UI.DisplayMessage("The amount of " + amount + " " + account.CurrencyType + " was transfered to your account.", ConsoleColor.Green, ConsoleColor.Green);
+                    account.WriteToFile(
+                    $"Loan: {amount} {account.CurrencyType}"
+                    );
                 }
             }
         }
@@ -189,8 +192,6 @@ namespace The_Invincible_Bank
         // Deposit money into bank account
         public void DepositMoney()
         {
-
-
             int userInput;
             bool exit = false;
             BankAccount account = null;
@@ -225,6 +226,9 @@ namespace The_Invincible_Bank
 
                 // Perform the deposit 
                 account.Deposit(amount);
+                account.WriteToFile(
+                    $"Deposit: {amount} {account.CurrencyType}" 
+                    );
 
                 // Show success message with new balance
                 string symbol = GetCurrencySymbol(account.CurrencyType);
