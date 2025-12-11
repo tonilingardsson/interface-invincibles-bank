@@ -70,7 +70,7 @@ namespace The_Invincible_Bank
         static public void WriteContinueMessage()
         {
             UI.DisplayMessage("Press any key to continue...", ConsoleColor.DarkGray, ConsoleColor.DarkGray);
-            Console.ReadKey();
+            Console.ReadKey(true); //true means that it doesn't show the key pressed
         }
     }
 }
