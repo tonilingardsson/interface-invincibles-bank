@@ -36,7 +36,7 @@ namespace The_Invincible_Bank
             Random rnd = new Random();
 
             // Loopar igenom alla valutor utom SEK (som alltid är 1)
-            foreach (var currency in new List<string> { "SEK", "USD", "EUR", "GBP" })
+            foreach (var currency in new List<string> { "USD", "EUR", "GBP" })
             {
                 decimal currentValue = CurrencyList[currency];
 
@@ -46,6 +46,7 @@ namespace The_Invincible_Bank
                 // Uppdaterar värdet med den slumpmässiga förrändringen
                 CurrencyList[currency] = Math.Round(currentValue * (1 + changePercent), 2); // Avrundar till två decimaler
             }
+            CurrencyList["SEK"] = 1m;
         }
 
         // Hjälpmetod för att skriva ut aktuella valutakurser
