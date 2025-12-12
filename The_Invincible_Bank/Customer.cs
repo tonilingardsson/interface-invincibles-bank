@@ -43,7 +43,8 @@ namespace The_Invincible_Bank
                 {
                     accounts += "\n";
                 }
-                accounts += $"{countFrom}: {account.Name} ({account.AccountNumber}) - Balance: {Math.Round(account.Sum, 2)} " + account.CurrencyType;
+                accounts += $"{countFrom}: {account.Name} ({account.AccountNumber}) - Balance: {Math.Round(account.Sum, 2)} {account.CurrencyType} " +
+
                 countFrom++;
             }
             UI.DisplayMessage(accounts);
@@ -132,7 +133,7 @@ namespace The_Invincible_Bank
                 exit = true;
             }
 
-            if(!exit)
+            if (!exit)
             {
                 account = Accounts.ElementAt(userInput - 1);
                 Console.Clear();
@@ -170,7 +171,7 @@ namespace The_Invincible_Bank
             if (!exit)
             {
                 account = Accounts.ElementAt(userInput - 1);
-                UI.DisplayFile(account.FilePath);            
+                UI.DisplayFile(account.FilePath);
             }
         }
 
@@ -223,16 +224,19 @@ namespace The_Invincible_Bank
                 }
 
                 Console.Clear();
-
+                decimal interest = account.Sum * 0.05m;
+                decimal yearlyInterest = interest + account.Sum;
+                decimal threeYearsInterest = yearlyInterest * 3;
                 // Perform the deposit 
                 account.Deposit(amount);
                 account.WriteToFile(
-                    $"Deposit: {amount} {account.CurrencyType}" 
+                    $"Deposit: {amount} {account.CurrencyType}"
                     );
-
+                          
                 // Show success message with new balance
                 string symbol = GetCurrencySymbol(account.CurrencyType);
-                UI.DisplayMessage($"Successfully desposited {amount:N2} {symbol} to account {account.Name} ({account.AccountNumber})", ConsoleColor.Green, ConsoleColor.Green);
+                UI.DisplayMessage($"Successfully desposited {amount:N2} {symbol} to account {account.Name} ({account.AccountNumber})" +
+                   $"\n\nThe interest is 5%. Your account in three years: {threeYearsInterest:N2} {account.CurrencyType}", ConsoleColor.Green, ConsoleColor.Green);
                 UI.DisplayMessage($"New Balance: {account.Sum:N2} {symbol}");
             }
 
