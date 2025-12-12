@@ -240,6 +240,7 @@ namespace The_Invincible_Bank
         }
         public void WithdrawMoney()
         {
+            // Ask the user which account to withdraw money from
             UI.DisplayMessage("Which account do you want to withdraw money from?\n0: Exit");
             ShowAccounts();
 
@@ -247,10 +248,10 @@ namespace The_Invincible_Bank
 
             if (userInput == 0)
             {
-                return; // Avsluta direkt
+                return; // Exit directly
             }
 
-            // Kontrollera att användaren valt ett giltigt konto
+            // Validate that the user selected a valid account
             if (userInput < 1 || userInput > Accounts.Count)
             {
                 UI.DisplayMessage("Invalid account selection.", ConsoleColor.Red, ConsoleColor.Red);
@@ -271,12 +272,12 @@ namespace The_Invincible_Bank
                 return;
             }
 
-            // Kontrollera om det finns tillräckligt med pengar
+            // Check if there are enough funds in the account
             if (amount > account.Sum)
             {
                 UI.DisplayMessage("Error: You can not withdraw more money than the account balence", ConsoleColor.Red, ConsoleColor.Red);
 
-                // Logga även misslyckade försök
+                // Log failed withdrawal attempts
                 account.WriteToFile(
                     $"Failed withdraw attempt: {amount:N2} {account.CurrencyType} | Date: {DateTime.Now}"
                 );
