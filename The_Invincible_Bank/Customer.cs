@@ -222,7 +222,7 @@ namespace The_Invincible_Bank
                 // Perform the deposit 
                 account.Deposit(amount);
                 account.WriteToFile(
-                    $"Deposit: {amount} {account.CurrencyType}" 
+                    $"Deposit: {amount} {account.CurrencyType}"
                     );
 
                 // Show success message with new balance
@@ -233,6 +233,66 @@ namespace The_Invincible_Bank
 
 
         }
+        public void WithdrawMoney()
+        {
+            // Ask the user which account to withdraw money from
+            UI.DisplayMessage("Which account do you want to withdraw money from?\n0: Exit");
+            ShowAccounts();
+
+            int userInput = Input.GetNumberFromUser(0, Accounts.Count);
+
+            if (userInput == 0)
+            {
+                return; // Exit directly
+            }
+
+            // Validate that the user selected a valid account
+            if (userInput < 1 || userInput > Accounts.Count)
+            {
+                UI.DisplayMessage("Invalid account selection.", ConsoleColor.Red, ConsoleColor.Red);
+                return;
+            }
+
+            BankAccount account = Accounts.ElementAt(userInput - 1);
+            Console.Clear();
+
+            // Get withdrawal amount from user
+            UI.DisplayMessage("How much money do you want to withdraw?");
+            decimal amount = Input.GetDecimalFromUser();
+
+            // Validate amount
+            if (amount <= 0)
+            {
+                UI.DisplayMessage("Invalid amount.", ConsoleColor.Red, ConsoleColor.Red);
+                return;
+            }
+
+            // Check if there are enough funds in the account
+            if (amount > account.Sum)
+            {
+                UI.DisplayMessage("Error: You can not withdraw more money than the account balence", ConsoleColor.Red, ConsoleColor.Red);
+
+                // Log failed withdrawal attempts
+                account.WriteToFile(
+                    $"Failed withdraw attempt: {amount:N2} {account.CurrencyType} | Date: {DateTime.Now}"
+                );
+                return;
+            }
+
+            Console.Clear();
+
+            // Perform the withdraw
+            account.Withdraw(amount);
+            account.WriteToFile(
+                $"Withdraw: {amount:N2} {account.CurrencyType} | Date: {DateTime.Now}"
+            );
+
+            // Show success message with new balance
+            string symbol = GetCurrencySymbol(account.CurrencyType);
+            UI.DisplayMessage($"Successfully withdraw {amount:N2} {symbol} from account {account.Name} ({account.AccountNumber})", ConsoleColor.Green, ConsoleColor.Green);
+            UI.DisplayMessage($"New Balance: {account.Sum:N2} {symbol}");
+        }
+
 
         // Fix the lack of currencySymbol
         private string GetCurrencySymbol(string currencyCode)

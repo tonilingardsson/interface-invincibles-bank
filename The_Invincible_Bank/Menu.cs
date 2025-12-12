@@ -69,7 +69,7 @@ namespace The_Invincible_Bank
                     Bank.lastRunTime = DateTime.Now;
                 }
 
-                UI.DisplayMessage("1: Show Accounts\n2: Create new account\n3: Transfer money \n4: Deposit money\n5: Show account history\n6: Borrow money\n7: Log out");
+                UI.DisplayMessage("1: Show Accounts\n2: Create new account\n3: Transfer money \n4: Deposit money\n5: Withdaw money\n6: Show account history\n7: Borrow money\n8: Log out\"");
 
                 switch (Input.GetNumberFromUser(1, 7))
                 {
@@ -96,15 +96,20 @@ namespace The_Invincible_Bank
                         break;
                     case 5:
                         Console.Clear();
-                        customer.ShowAccountHistory();
+                        customer.WithdrawMoney();
                         UI.WriteContinueMessage();
                         break;
                     case 6:
                         Console.Clear();
-                        customer.BorrowMoney();
+                        customer.ShowAccountHistory();
                         UI.WriteContinueMessage();
                         break;
                     case 7:
+                        Console.Clear();
+                        customer.BorrowMoney();
+                        UI.WriteContinueMessage();
+                        break;
+                    case 8:
                         Console.Clear();
                         exist = true;
                         break;
