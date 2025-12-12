@@ -175,19 +175,14 @@ namespace The_Invincible_Bank
             }
         }
 
-        public void CreateBankAccount(string accountName, string currencyType)
+        public void CreateBankAccount(string accountName, string currencyType, decimal balance, string accountNumber)
         {
             //Creates and adds a new account to the account list. 
             {
-                Random? rnd = new Random();
-                string accountNumber = rnd.Next(0, 9999).ToString("D4");
-
-                BankAccount newAccount = new BankAccount(accountName, currencyType, accountNumber);
+                BankAccount newAccount = new BankAccount(accountName, currencyType, accountNumber, balance);
                 // Add it to the customer's account list
                 Accounts.Add(newAccount);
             }
-            //Make sure to generate a bank account number that does not already EXSIST IN THE LIST!
-            //Användaren ska även få en ränta på sitt nya konto. 1%
         }
 
         // Deposit money into bank account
@@ -242,6 +237,66 @@ namespace The_Invincible_Bank
 
 
         }
+        public void WithdrawMoney()
+        {
+            // Ask the user which account to withdraw money from
+            UI.DisplayMessage("Which account do you want to withdraw money from?\n0: Exit");
+            ShowAccounts();
+
+            int userInput = Input.GetNumberFromUser(0, Accounts.Count);
+
+            if (userInput == 0)
+            {
+                return; // Exit directly
+            }
+
+            // Validate that the user selected a valid account
+            if (userInput < 1 || userInput > Accounts.Count)
+            {
+                UI.DisplayMessage("Invalid account selection.", ConsoleColor.Red, ConsoleColor.Red);
+                return;
+            }
+
+            BankAccount account = Accounts.ElementAt(userInput - 1);
+            Console.Clear();
+
+            // Get withdrawal amount from user
+            UI.DisplayMessage("How much money do you want to withdraw?");
+            decimal amount = Input.GetDecimalFromUser();
+
+            // Validate amount
+            if (amount <= 0)
+            {
+                UI.DisplayMessage("Invalid amount.", ConsoleColor.Red, ConsoleColor.Red);
+                return;
+            }
+
+            // Check if there are enough funds in the account
+            if (amount > account.Sum)
+            {
+                UI.DisplayMessage("Error: You can not withdraw more money than the account balence", ConsoleColor.Red, ConsoleColor.Red);
+
+                // Log failed withdrawal attempts
+                account.WriteToFile(
+                    $"Failed withdraw attempt: {amount:N2} {account.CurrencyType} | Date: {DateTime.Now}"
+                );
+                return;
+            }
+
+            Console.Clear();
+
+            // Perform the withdraw
+            account.Withdraw(amount);
+            account.WriteToFile(
+                $"Withdraw: {amount:N2} {account.CurrencyType} | Date: {DateTime.Now}"
+            );
+
+            // Show success message with new balance
+            string symbol = GetCurrencySymbol(account.CurrencyType);
+            UI.DisplayMessage($"Successfully withdraw {amount:N2} {symbol} from account {account.Name} ({account.AccountNumber})", ConsoleColor.Green, ConsoleColor.Green);
+            UI.DisplayMessage($"New Balance: {account.Sum:N2} {symbol}");
+        }
+
 
         // Fix the lack of currencySymbol
         private string GetCurrencySymbol(string currencyCode)
