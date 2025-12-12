@@ -174,19 +174,14 @@ namespace The_Invincible_Bank
             }
         }
 
-        public void CreateBankAccount(string accountName, string currencyType)
+        public void CreateBankAccount(string accountName, string currencyType, decimal balance, string accountNumber)
         {
             //Creates and adds a new account to the account list. 
             {
-                Random? rnd = new Random();
-                string accountNumber = rnd.Next(0, 9999).ToString("D4");
-
-                BankAccount newAccount = new BankAccount(accountName, currencyType, accountNumber);
+                BankAccount newAccount = new BankAccount(accountName, currencyType, accountNumber, balance);
                 // Add it to the customer's account list
                 Accounts.Add(newAccount);
             }
-            //Make sure to generate a bank account number that does not already EXSIST IN THE LIST!
-            //Användaren ska även få en ränta på sitt nya konto. 1%
         }
 
         // Deposit money into bank account

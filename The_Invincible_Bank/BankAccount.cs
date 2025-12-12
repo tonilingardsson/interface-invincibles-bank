@@ -19,10 +19,10 @@ namespace The_Invincible_Bank
         {
 
         }
-        public BankAccount(string name, string currencyType, string accountNumber)
+        public BankAccount(string name, string currencyType, string accountNumber, decimal balance = 0)
         {
             Name = name;
-            Sum = Currency.Convert("SEK", currencyType, 10);
+            Sum = Currency.Convert("SEK", currencyType, balance);
             CurrencyType = currencyType;
             AccountNumber = accountNumber;
             //Create filename based on account number
