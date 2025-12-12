@@ -231,7 +231,7 @@ namespace The_Invincible_Bank
                 // Show success message with new balance
                 string symbol = GetCurrencySymbol(account.CurrencyType);
                 UI.DisplayMessage($"Successfully desposited {amount:N2} {symbol} to account {account.Name} ({account.AccountNumber})" +
-                   $"\n\nThe interest is 5%. Your account in three years: {threeYearsInterest:N2} {account.CurrencyType}", ConsoleColor.Green, ConsoleColor.Green);
+                   $"\n\nThe interest is 5%. Your account in three years: {threeYearsInterest:N2} {symbol}", ConsoleColor.Green, ConsoleColor.Green);
                 UI.DisplayMessage($"New Balance: {account.Sum:N2} {symbol}");
             }
 
