@@ -71,7 +71,7 @@ namespace The_Invincible_Bank
 
                 UI.DisplayMessage("1: Show Accounts\n2: Create new account\n3: Transfer money \n4: Deposit money\n5: Show account history\n6: Borrow money\n7: Log out");
 
-                switch (Input.GetNumberFromUser(1, 8))
+                switch (Input.GetNumberFromUser(1, 7))
                 {
                     case 1:
                         Console.Clear();
@@ -80,7 +80,7 @@ namespace The_Invincible_Bank
                         break;
                     case 2:
                         Console.Clear();
-                        customer.CreateBankAccount(Input.GetString(), Input.GetCurrency());
+                        customer.CreateBankAccount(Input.GetString(), Input.GetCurrency(), Input.GetDecimalFromUser(), Input.GetString());
                         UI.DisplayMessage("Account was created!", ConsoleColor.Green, ConsoleColor.Green);
                         UI.WriteContinueMessage();
                         break;

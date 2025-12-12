@@ -25,17 +25,25 @@ namespace The_Invincible_Bank
 
         public Bank()
         {
-
             var adminOne = new Admin(1111, "1111");//test
             var customerOne = new Customer(2222, "2222");
-            var customertwo = new Customer(3333, "3333");
-            customertwo.CreateBankAccount("Vacation savings", "SEK"); //Funktion finns inte ännu
+            var customerTwo = new Customer(3333, "3333");
+            customerOne.CreateBankAccount("CSN Life", "SEK", 10000m, "4444");
+            customerOne.CreateBankAccount("Dev Life", "EUR", 50000m, "5555");
+            customerTwo.CreateBankAccount("Dada Leif", "SEK", 600000m, "6666");
+            customerTwo.CreateBankAccount("Vacation savings", "EUR", 0m, "7777");
+            
             UserAccounts = new List<User>();
             LockedCustomerAccounts = new List<Customer>();
 
             UserAccounts.Add(adminOne);
             UserAccounts.Add(customerOne);
-            UserAccounts.Add(customertwo);
+            UserAccounts.Add(customerTwo);
+
+            Transfer firstTransfer = new Transfer(customerOne.Accounts[1], customerTwo.Accounts[0], 500m);
+            Transfer secondTransfer = new Transfer(customerTwo.Accounts[0], customerTwo.Accounts[1], 100m);
+            ListOfTransfers.Add(firstTransfer);
+            ListOfTransfers.Add(secondTransfer);
         }
 
         public void AddUserToList(User user)
@@ -88,11 +96,9 @@ namespace The_Invincible_Bank
         }
         static public void ProcessTransfers()
         {
-
             // Loop through each transfer in the list
             foreach (Transfer transfer in ListOfTransfers)
             {
-
                 // 1. Withdraw from sender
                 transfer.FromAccount.Withdraw(transfer.FromAmount);
 
@@ -107,9 +113,8 @@ namespace The_Invincible_Bank
                 transfer.ToAccount.WriteToFile(
                     $"Received {transfer.ToAmount} {transfer.ToAccount.CurrencyType} from account {transfer.ToAccount.AccountNumber}"
                 );
-
-                UI.DisplayMessage("All queued transferes processed", ConsoleColor.DarkGreen, ConsoleColor.DarkGreen);
             }
+                UI.DisplayMessage("All queued transferes processed", ConsoleColor.DarkGreen, ConsoleColor.DarkGreen);
                 // 4. Empty the list after processing all transfers
                 ListOfTransfers.Clear();
         }
