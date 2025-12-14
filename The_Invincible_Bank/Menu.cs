@@ -69,7 +69,7 @@ namespace The_Invincible_Bank
                     Bank.lastRunTime = DateTime.Now;
                 }
 
-                UI.DisplayMessage("1: Show Accounts\n2: Create new account\n3: Transfer money \n4: Deposit money\n5: Withdaw money\n6: Show account history\n7: Borrow money\n8: Log out\"");
+                UI.DisplayMessage("1: Show Accounts\n2: Create new account\n3: Transfer money \n4: Deposit money\n5: Withdaw money\n6: Show account history\n7: Borrow money\n8: Log out");
 
                 switch (Input.GetNumberFromUser(1, 7))
                 {
