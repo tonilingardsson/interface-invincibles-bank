@@ -19,13 +19,16 @@ namespace The_Invincible_Bank
 
             UI.DisplayMessage("Enter your security number. It should contain four digits");
 
-            while (!int.TryParse(Console.ReadLine(), out securityNumber) && securityNumber.ToString().Length != 4)
+            while (!int.TryParse(Console.ReadLine(), out securityNumber) || securityNumber.ToString().Length != 4)
             {
                 UI.DisplayMessage("Please enter a valid security number");
             }
 
             UI.DisplayMessage("Please enter a password");
-            password = Console.ReadLine();
+            while ((password = Console.ReadLine()).Length <= 0)
+            {
+                UI.DisplayMessage("Please enter a password");
+            }
 
             Customer newAccount = new Customer(securityNumber, password);
             Bank.UserAccounts.Add(new Customer(securityNumber, password));

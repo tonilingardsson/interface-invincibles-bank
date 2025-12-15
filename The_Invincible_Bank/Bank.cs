@@ -160,7 +160,7 @@ namespace The_Invincible_Bank
 
             return false;
         }
-        private static bool CheckAccountBorrowValidity(decimal sum)
+        public static bool CheckAccountBorrowValidity(decimal sum)
         {
             decimal totalWorth = 0;
 

@@ -43,7 +43,7 @@ namespace The_Invincible_Bank
                 {
                     accounts += "\n";
                 }
-                accounts += $"{countFrom}: {account.Name} ({account.AccountNumber}) - Balance: {Math.Round(account.Sum, 2)} {account.CurrencyType} " +
+                accounts += $"{countFrom}: {account.Name} ({account.AccountNumber}) - Balance: {Math.Round(account.Sum, 2)} {account.CurrencyType} ";
 
                 countFrom++;
             }
@@ -135,17 +135,25 @@ namespace The_Invincible_Bank
 
             if (!exit)
             {
+                decimal totalWorth = 0;
                 account = Accounts.ElementAt(userInput - 1);
                 Console.Clear();
-                UI.DisplayMessage($"The highest amount you can loan is {account.Sum * 5} {account.CurrencyType}.", ConsoleColor.Blue);
+
+                foreach (var accounts in Accounts) //Gets the worth of all the accounts of the current user
+                {
+                    totalWorth += Currency.Convert(accounts.CurrencyType, "SEK", accounts.Sum);
+                }
+
+                UI.DisplayMessage($"The highest amount you can loan is {totalWorth * 5} {account.CurrencyType}.", ConsoleColor.Blue);
                 UI.DisplayMessage("2: How much money do you want to loan?");
                 decimal amount = Input.GetDecimalFromUser();
-                if (!Bank.Borrow(account, amount))
+                if (!Bank.CheckAccountBorrowValidity(amount))
                 {
                     UI.DisplayMessage("Transfer was not succesfull\nYour account did not qualify for loan this amount of money", ConsoleColor.Red, ConsoleColor.Red);
                 }
                 else
                 {
+                    Bank.Borrow(account, amount);
                     UI.DisplayMessage("The amount of " + amount + " " + account.CurrencyType + " was transfered to your account.", ConsoleColor.Green, ConsoleColor.Green);
                     account.WriteToFile(
                     $"Loan: {amount} {account.CurrencyType}"
@@ -175,6 +183,20 @@ namespace The_Invincible_Bank
             }
         }
 
+        public void CreateBankAccount(string accountName, string currencyType)
+        {
+
+            UI.DisplayMessage("How much money in SEK do you want to deposit in to your new account?");
+            decimal balance = Input.GetDecimalFromUser();
+            string accountNumber = Input.GetAccountNumberFromUser();
+
+            //Creates and adds a new account to the account list. 
+            {
+                BankAccount newAccount = new BankAccount(accountName, currencyType, accountNumber, balance);
+                // Add it to the customer's account list
+                Accounts.Add(newAccount);
+            }
+        }
         public void CreateBankAccount(string accountName, string currencyType, decimal balance, string accountNumber)
         {
             //Creates and adds a new account to the account list. 
@@ -219,11 +241,11 @@ namespace The_Invincible_Bank
                 }
 
                 Console.Clear();
+                account.Deposit(amount);
                 decimal interest = account.Sum * 0.05m;
                 decimal yearlyInterest = interest + account.Sum;
                 decimal threeYearsInterest = yearlyInterest * 3;
                 // Perform the deposit 
-                account.Deposit(amount);
                 account.WriteToFile(
                     $"Deposit: {amount} {account.CurrencyType}"
                     );
