@@ -16,7 +16,9 @@ namespace The_Invincible_Bank
             {
                 Console.Clear();
 
-                if (DateTime.Now - Bank.lastRunTime >= Bank.interval)
+                var time = (DateTime.Now - Bank.lastRunTime);
+
+                if (time >= Bank.interval)
                 {
                     Bank.ProcessTransfers();
                     Bank.lastRunTime = DateTime.Now;
@@ -71,7 +73,7 @@ namespace The_Invincible_Bank
 
                 UI.DisplayMessage("1: Show Accounts\n2: Create new account\n3: Transfer money \n4: Deposit money\n5: Withdaw money\n6: Show account history\n7: Borrow money\n8: Log out");
 
-                switch (Input.GetNumberFromUser(1, 7))
+                switch (Input.GetNumberFromUser(1, 8))
                 {
                     case 1:
                         Console.Clear();
@@ -80,7 +82,7 @@ namespace The_Invincible_Bank
                         break;
                     case 2:
                         Console.Clear();
-                        customer.CreateBankAccount(Input.GetString(), Input.GetCurrency(), Input.GetDecimalFromUser(), Input.GetString());
+                        customer.CreateBankAccount(Input.GetString(), Input.GetCurrency());
                         UI.DisplayMessage("Account was created!", ConsoleColor.Green, ConsoleColor.Green);
                         UI.WriteContinueMessage();
                         break;

@@ -43,7 +43,7 @@ namespace The_Invincible_Bank
                 {
                     accounts += "\n";
                 }
-                accounts += $"{countFrom}: {account.Name} ({account.AccountNumber}) - Balance: {Math.Round(account.Sum, 2)} {account.CurrencyType} " +
+                accounts += $"{countFrom}: {account.Name} ({account.AccountNumber}) - Balance: {Math.Round(account.Sum, 2)} {account.CurrencyType} ";
 
                 countFrom++;
             }
@@ -175,6 +175,20 @@ namespace The_Invincible_Bank
             }
         }
 
+        public void CreateBankAccount(string accountName, string currencyType)
+        {
+
+            UI.DisplayMessage("How much money do you want to deposit in to your new account?");
+            decimal balance = Input.GetDecimalFromUser();
+            string accountNumber = Input.GetAccountNumberFromUser();
+
+            //Creates and adds a new account to the account list. 
+            {
+                BankAccount newAccount = new BankAccount(accountName, currencyType, accountNumber, balance);
+                // Add it to the customer's account list
+                Accounts.Add(newAccount);
+            }
+        }
         public void CreateBankAccount(string accountName, string currencyType, decimal balance, string accountNumber)
         {
             //Creates and adds a new account to the account list. 
@@ -219,11 +233,11 @@ namespace The_Invincible_Bank
                 }
 
                 Console.Clear();
+                account.Deposit(amount);
                 decimal interest = account.Sum * 0.05m;
                 decimal yearlyInterest = interest + account.Sum;
                 decimal threeYearsInterest = yearlyInterest * 3;
                 // Perform the deposit 
-                account.Deposit(amount);
                 account.WriteToFile(
                     $"Deposit: {amount} {account.CurrencyType}"
                     );
